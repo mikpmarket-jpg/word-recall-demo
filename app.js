@@ -40,7 +40,8 @@ let toastTimer;
 function rolloverDay() { if (state.day !== TODAY()) { state.day = TODAY(); state.addedToday = 0; } }
 function persist() {
   try { (window.WordRecallData?.local || localStorage).setItem(STORAGE_KEY, JSON.stringify(state)); }
-  catch { if (!storageWarningShown) { storageWarningShown = true; showToast('Браузер не разрешает сохранение. Изменения останутся только в этом сеансе.'); } }
+  catch { if (!storageWarningShown) { storageWarningShown = true; showToast('Браузер не разрешает сохранение. Изменения останутся только в этом сеансе.'); } return false; }
+  return true;
 }
 function cycleIds() { return new Set(window.WordRecallCycle?.state.words.map(w => w.id) || []); }
 function count(status) { const selected=cycleIds(),queued=new Set(window.WordRecallCycle?.state.queueIds||[]); return status==='cycle'?selected.size:WORDS.filter(w => !selected.has(w.id) && (state.statuses[w.id] === status || status==='learn'&&queued.has(w.id))).length; }
@@ -67,7 +68,7 @@ function renderStatus() {
   $('batch').value=state.batch;$('batch-label').textContent=state.batch;
   $('batch-minus').disabled=state.batch<=1;$('batch-plus').disabled=state.batch>=1000;
   const r=remaining();$('add-words').disabled=state.batch>Math.min(r.list,r.day,r.pool);
-  const hint=$('add-availability');if(hint){hint.replaceChildren();const allowed=Math.min(r.list,r.day,r.pool);hint.textContent=!r.pool?'Нет новых слов для добавления.':!r.list?'Список «Изучаю» заполнен. Перенесите слова в цикл или увеличьте лимит в настройках.':!r.day?'На сегодня достигнут лимит новых слов. Его можно изменить в настройках.':state.batch>allowed?`Сейчас можно добавить не больше ${allowed} слов. Уменьшите партию.`:'';hint.hidden=!hint.textContent;}
+  const hint=$('add-availability');if(hint){hint.replaceChildren();const allowed=Math.min(r.list,r.day,r.pool);hint.textContent=!r.pool?'Нет новых слов для добавления.':!r.list?'Список «Новые» заполнен. Выберите «Знаю» или «Изучаю» или увеличьте лимит в настройках.':!r.day?'На сегодня достигнут лимит новых слов. Его можно изменить в настройках.':state.batch>allowed?`Сейчас можно добавить не больше ${allowed} слов. Уменьшите партию.`:'';hint.hidden=!hint.textContent;}
   document.querySelectorAll('[data-vocabulary-count]').forEach(counter=>{counter.textContent=count(counter.dataset.vocabularyCount);});
   if(!$('word-list'))return;
   for(const tab of ['learn','cycle','known']){
@@ -80,17 +81,18 @@ function renderStatus() {
 function renderList() {
   const list = $('word-list');if(!list)return;
   const selected=cycleIds(),queued=new Set(window.WordRecallCycle?.state.queueIds||[]);
-  const rows = state.tab==='cycle' ? WORDS.filter(word=>selected.has(word.id)) : WORDS.filter(word => !selected.has(word.id) && (state.statuses[word.id] === state.tab || state.tab==='learn'&&queued.has(word.id)));
+  let rows = state.tab==='cycle' ? WORDS.filter(word=>selected.has(word.id)) : WORDS.filter(word => !selected.has(word.id) && (state.statuses[word.id] === state.tab || state.tab==='learn'&&queued.has(word.id)));
+  if(state.tab==='learn'&&Array.isArray(state.recentAdded)){const recent=new Map(state.recentAdded.map((id,i)=>[id,i]));rows=rows.slice().sort((a,b)=>(recent.get(a.id)??10000)-(recent.get(b.id)??10000));}
   list.replaceChildren();
   if (!rows.length) {
 
     const empty = document.createElement('div'); empty.className = 'empty';
     const title=document.createElement('h3');title.textContent='Нет слов';
-    const text=document.createElement('p');text.textContent=state.tab==='known'?'Здесь будут слова, которые вы отметите как знакомые.':state.tab==='cycle'?'Добавьте слова в цикл из вкладки «Изучаю».':'Добавьте новую партию слов с помощью блока выше.';empty.append(title,text);list.append(empty);return;
+    const text=document.createElement('p');text.textContent=state.tab==='known'?'Здесь будут слова, которые вы отметите как знакомые.':state.tab==='cycle'?'Выберите слова для изучения во вкладке «Новые».':'Добавьте новую партию слов с помощью блока выше.';empty.append(title,text);list.append(empty);return;
   }
   rows.forEach(word => {
     const row = document.createElement('div'); row.className = 'word-row'; row.dataset.id = word.id; row.dataset.status = state.tab;
-    const target = state.tab === 'learn' ? 'Знаю' : 'Изучаю';
+    const target = state.tab === 'learn' ? 'Изучаю' : 'Новые';
     const underlay = document.createElement('div'); underlay.className = 'row-underlay'; underlay.setAttribute('aria-hidden', 'true');
     const destination = document.createElement('strong'); destination.textContent = `В «${target}»`;
     const definitions = document.createElement('span'); definitions.className = 'definitions';
@@ -100,42 +102,48 @@ function renderList() {
     const rank = document.createElement('span'); rank.className = 'rank'; rank.textContent = '#' + word.rank; rank.setAttribute('aria-label', 'Топ ' + word.rank);
     const name = document.createElement('span'); name.className = 'word-name'; name.textContent = word.word;
     row.tabIndex = 0;
-    row.setAttribute('aria-label', `${word.word}${Number.isFinite(word.rank)?', топ '+word.rank:''}. ${state.tab === 'learn' ? 'Стрелка вправо' : 'Стрелка влево'}: перенести в «${target}».`);
+    row.setAttribute('aria-label', `${word.word}${Number.isFinite(word.rank)?', топ '+word.rank:''}. ${state.tab==='learn'?'Влево: знаю. Вправо: изучаю.':'Влево: вернуть в новые.'}`);
     row.addEventListener('keydown', event => {
-      if (event.target===row&&event.key === (state.tab === 'learn' ? 'ArrowRight' : 'ArrowLeft')) { event.preventDefault(); moveWord(word.id); }
+      if(event.target!==row)return;
+      if(state.tab==='learn'&&['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();moveWord(word.id,false,event.key==='ArrowLeft'?'known':'cycle');}
+      else if(state.tab!=='learn'&&event.key==='ArrowLeft'){event.preventDefault();moveWord(word.id,false,'learn');}
     });
-    if(Number.isFinite(word.rank))front.append(rank);front.append(name); row.append(underlay, front); list.append(row);
-    if(state.tab==='learn'&&window.CYCLE_CORPUS.words.some(w=>w.id===word.id)){
-      const add=document.createElement('button');add.className='add-to-cycle';add.textContent='В цикл';add.setAttribute('aria-label',`Добавить ${word.word} в текущий цикл`);
-      add.addEventListener('click',()=>{const result=window.WordRecallCycle.changeWord(window.WordRecallCycle.state,word.id,true);if(!result.ok){showToast(result.message);return;}render();showToast(`${word.word} → «Текущий цикл»`);});front.append(add);
+    if(Number.isFinite(word.rank))front.append(rank);front.append(name);
+    const actions=document.createElement('div');actions.className='word-actions';
+    for(const [to,label] of state.tab==='learn'?[['known','← Знаю'],['cycle','Изучаю →']]:[['learn','← Новые']]){
+      const button=document.createElement('button');button.type='button';button.className=to==='cycle'?'add-to-cycle':'word-status-action';button.textContent=label;
+      button.setAttribute('aria-label',`${word.word}: ${label.replace(/[←→]/g,'').trim()}`);
+      button.addEventListener('click',()=>moveWord(word.id,false,to));actions.append(button);
     }
+    front.append(actions);row.append(underlay,front);list.append(row);
     bindSwipe(row, front, word.id);
   });
 }
 function render() { renderStatus(); renderList(); }
-function moveWord(id, automatic = false) {
-  if(state.tab==='cycle'){
-    const result=window.WordRecallCycle.changeWord(window.WordRecallCycle.state,id,false);
+function moveWord(id, automatic = false, destination) {
+  const api=window.WordRecallCycle,selected=api.state.words.find(w=>w.id===id);
+  const from=selected?'cycle':state.statuses[id]||(api.state.queueIds?.includes(id)?'learn':null);
+  if(!from)return;
+  const to=destination||(automatic?'known':from==='learn'?'cycle':'learn');
+  if(from===to)return;
+  const hadFocus=$('word-list')?.contains(document.activeElement),rowIndex=[...($('word-list')?.children||[])].findIndex(row=>row.dataset.id===id);
+  const move={id,from,to,priorStatus:state.statuses[id],role:selected?.role,fromQueue:api.state.queueIds?.includes(id)};
+  if(to==='cycle'||from==='cycle'){
+    const result=api.changeWord(api.state,id,to==='cycle');
     if(!result.ok){showToast(result.message);return;}
-    lastMove={id,from:'cycle',to:'learn',role:result.role};render();showToast(`${id} → «Изучаю»`,true);return;
   }
-  const from = state.statuses[id] || (window.WordRecallCycle?.state.queueIds.includes(id)?'learn':null); if (!from) return;
-  const to = automatic ? 'known' : from === 'learn' ? 'known' : 'learn';
-  if (from === to) return;
-  const hadFocus = $('word-list').contains(document.activeElement);
-  const rowIndex = [...$('word-list').children].findIndex(row => row.dataset.id === id);
-  lastMove = { id, from, to, fromQueue:window.WordRecallCycle?.state.queueIds.includes(id) };
-  state.statuses[id] = to;
-  if(to==='known'&&lastMove.fromQueue)window.WordRecallCycle.setQueue(window.WordRecallCycle.state,id,false);
-  render(); persist();
-  if (hadFocus) { const rows = $('word-list').querySelectorAll('.word-row'); (rows[Math.min(rowIndex, rows.length - 1)] || $('tab-' + state.tab)).focus({ preventScroll: true }); }
-  showToast(`${id} → ${to === 'known' ? '«Знаю»' : '«Изучаю»'}`, true);
+  state.statuses[id]=to==='known'?'known':'learn';
+  if(to==='known'&&api.state.queueIds?.includes(id))api.setQueue(api.state,id,false);
+  lastMove=move;render();persist();
+  if(hadFocus){const rows=$('word-list').querySelectorAll('.word-row');(rows[Math.min(rowIndex,rows.length-1)]||$('tab-'+state.tab)).focus({preventScroll:true});}
+  const noPhrases=to==='cycle'&&!api.state.phraseIds.some(pid=>window.CYCLE_CORPUS.phrases.some(p=>p.id===pid&&p.word===id));
+  showToast(`${id} → «${{learn:'Новые',cycle:'Изучаю',known:'Знаю'}[to]}»${noPhrases?'. Фразы для этого слова пока не подготовлены.':''}`,true);
 }
 function bindSwipe(row, front, id) {
   let gesture = null;
   row.addEventListener('pointerdown', event => {
     if (event.target.closest('button') || !event.isPrimary || event.button !== 0) return;
-    gesture = { x: event.clientX, y: event.clientY, dx: 0, direction: state.tab === 'learn' ? 1 : -1, pointer: event.pointerId, horizontal: false };
+    gesture = { x: event.clientX, y: event.clientY, dx: 0, direction: state.tab === 'learn' ? 0 : -1, pointer: event.pointerId, horizontal: false };
   });
   row.addEventListener('pointermove', event => {
     if (!gesture || event.pointerId !== gesture.pointer) return;
@@ -143,14 +151,17 @@ function bindSwipe(row, front, id) {
     if (!gesture.horizontal && Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { gesture = null; return; }
     if (!gesture.horizontal && Math.abs(dx) > 9 && Math.abs(dx) > Math.abs(dy)) { gesture.horizontal = true; row.setPointerCapture(event.pointerId); row.classList.add('dragging'); }
     if (!gesture.horizontal) return;
-    gesture.dx = dx * gesture.direction > 0 ? Math.min(Math.abs(dx), 155) * gesture.direction : 0;
+    gesture.dx = (gesture.direction===0 || dx * gesture.direction > 0) ? Math.min(Math.abs(dx), 155) * (dx<0?-1:1) : 0;
+    row.classList.toggle('drag-left',gesture.dx<0);row.classList.toggle('drag-right',gesture.dx>0);
+    const label=state.tab==='learn'?(gesture.dx<0?'Знаю':'Изучаю'):'Новые';row.querySelector('.row-underlay strong').textContent=`В «${label}»`;
     front.style.transform = `translateX(${gesture.dx}px)`;
   });
   const end = event => {
     if (!gesture || event.pointerId !== gesture.pointer) return;
     const commit = event.type === 'pointerup' && Math.abs(gesture.dx) >= 70;
+    const to=state.tab==='learn'?(gesture.dx<0?'known':'cycle'):'learn';
     gesture = null;
-    if (commit) moveWord(id);
+    if (commit) moveWord(id,false,to);
     else { front.style.transition = 'transform 160ms ease'; front.style.transform = ''; setTimeout(() => { row.classList.remove('dragging'); front.style.transition = ''; }, 165); }
   };
   row.addEventListener('pointerup', end); row.addEventListener('pointercancel', end); row.addEventListener('lostpointercapture', end);
@@ -165,11 +176,13 @@ function addWords(amount, automatic = false) {
   }
   const fresh = freshWords().slice(0, amount);
   fresh.forEach(w => { state.statuses[w.id] = 'learn'; });
-  state.addedToday += fresh.length; state.tab = 'learn'; lastMove = null;
-  render(); persist();
+  state.addedToday += fresh.length; state.tab = 'learn';state.recentAdded=fresh.map(w=>w.id); lastMove = null;
+  render(); const saved=persist();
+  if(!saved)return false;
+  if(!$('word-list')&&!automatic){location.assign('words.html?added=1');return true;}
   const firstNew = [...($('word-list')?.children||[])].find(row => row.dataset.id === fresh[0]?.id);
   if(firstNew){const scroller=$('words-scroll');if(scroller)scroller.scrollTop=Math.max(0,firstNew.offsetTop-document.querySelector('.list-controls').offsetHeight);else $('word-list').scrollTop=firstNew.offsetTop-$('word-list').firstElementChild.offsetTop;}
-  showToast(`Добавлено ${fresh.length} ${plural(fresh.length, 'слово', 'слова', 'слов')} в «Изучаю».`); return true;
+  showToast(`Добавлено ${fresh.length} ${plural(fresh.length, 'слово', 'слова', 'слов')} в «Новые».`); return true;
 }
 function sync(){restore();rolloverDay();const cycle=window.WordRecallCycle?.read();if(cycle)window.WordRecallCycle.state=cycle;render();}
 window.WordRecallWords={key:STORAGE_KEY,get state(){return state;},sync,
@@ -190,7 +203,13 @@ document.querySelectorAll('[data-tab]').forEach(button => {
   button.addEventListener('click', () => { state.tab = button.dataset.tab; render(); scrollListStart(); persist(); });
   button.addEventListener('keydown', event => { if (['ArrowLeft', 'ArrowRight'].includes(event.key)) { event.preventDefault(); const tabs=['learn','cycle','known'];const next = $('tab-' + tabs[(tabs.indexOf(state.tab)+(event.key==='ArrowRight'?1:tabs.length-1))%tabs.length]); next.click(); next.focus(); } });
 });
-$('undo').addEventListener('click', () => { if (!lastMove) return; if(lastMove.from==='cycle'){const result=window.WordRecallCycle.changeWord(window.WordRecallCycle.state,lastMove.id,true,lastMove.role);if(!result.ok){showToast(result.message);return;}}else {state.statuses[lastMove.id] = lastMove.from;if(lastMove.fromQueue)window.WordRecallCycle.setQueue(window.WordRecallCycle.state,lastMove.id,true);} lastMove = null; render(); persist(); clearToast(); });
+$('undo').addEventListener('click', () => {
+  if(!lastMove)return;const move=lastMove,api=window.WordRecallCycle;
+  if(move.from==='cycle'||move.to==='cycle'){const result=api.changeWord(api.state,move.id,move.from==='cycle',move.role);if(!result.ok){showToast(result.message);return;}}
+  if(move.priorStatus)state.statuses[move.id]=move.priorStatus;else delete state.statuses[move.id];
+  api.setQueue(api.state,move.id,!!move.fromQueue);
+  lastMove=null;render();persist();clearToast();
+});
 $('dismiss-toast').addEventListener('click', clearToast);
 document.querySelectorAll('[data-demo]').forEach(button => button.addEventListener('click', () => {
   if(window.WordRecallData?.isTest===false)return;
@@ -203,13 +222,14 @@ document.querySelectorAll('[data-demo]').forEach(button => button.addEventListen
     case 'heard': {
       if (!state.settings.autoKnown) { showToast('Автоматический перенос выключен в настройках.'); return; }
       const word = WORDS.find(w => state.statuses[w.id] === 'learn');
-      if (word) moveWord(word.id, true); else showToast('В «Изучаю» нет слов для переноса.');
+      if (word) moveWord(word.id, true); else showToast('В «Новые» нет слов для переноса.');
       return;
     }
     case 'reset': state = defaults(); break;
   }
   render(); persist(); scrollListStart();
 }));
+if(new URLSearchParams(location.search).get('added')==='1')state.tab='learn';
 rolloverDay(); render();
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync();});
 

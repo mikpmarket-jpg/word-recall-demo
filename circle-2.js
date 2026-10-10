@@ -37,21 +37,21 @@ function sourceWords(){
   if(view.sample)return LISTEN_WORDS.filter(w=>['time','way','day'].includes(w.id));
   try {
     const source=JSON.parse((window.WordRecallData?.local || localStorage).getItem(WORD_KEY));
-    if(source?.version===1 && source.statuses)return LISTEN_WORDS.filter(w=>source.statuses[w.id]==='learn');
+    if(source?.version===1 && source.statuses)return Object.keys(source.statuses).filter(id=>source.statuses[id]==='learn').map(id=>wordById[id]||{id,word:id,translation:''});
   } catch { /* Use the same initial list as the selection prototype. */ }
   return LISTEN_WORDS.slice(0,12);
 }
 function cycleWords(){return window.CycleContext?window.WordRecallCycle.words(window.WordRecallCycle.state):LISTEN_WORDS.filter(w=>view.wordIds.includes(w.id));}
 function waitingWords(){
   const selected=new Set(cycleWords().map(w=>w.id));
-  const queued=window.CycleContext?(window.WordRecallCycle.state.queueIds||[]).map(id=>wordById[id]).filter(Boolean):[];
+  const queued=window.CycleContext?(window.WordRecallCycle.state.queueIds||[]).map(id=>wordById[id]||{id,word:id,translation:''}):[];
   return [...new Map([...sourceWords(),...queued].filter(w=>!selected.has(w.id)).map(w=>[w.id,w])).values()];
 }
 function phrases(){
   if(window.CycleContext)return window.WordRecallCycle.phrases(window.WordRecallCycle.state);
   const ids=new Set(cycleWords().map(w=>w.id));return LISTEN_PHRASES.filter(p=>ids.has(p.word));
 }
-function labelBucket(bucket){return {study:'Изучаю',cycle:'Текущий цикл',listen:'Аудирование',heard:'Прослушано',excluded:'Текущий цикл'}[bucket];}
+function labelBucket(bucket){return {study:'Новые',cycle:'Изучаю',listen:'Аудирование',heard:'Прослушано',excluded:'Изучаю'}[bucket];}
 function toast(message,undo=false){clearTimeout(toastTimer);el('listen-toast-text').textContent=message;el('listen-undo').hidden=!undo;el('listen-toast').hidden=false;toastTimer=setTimeout(()=>{el('listen-toast').hidden=true;lastMove=null;},undo?9000:4500);}
 function clearToast(){clearTimeout(toastTimer);el('listen-toast').hidden=true;lastMove=null;}
 function wordPhrases(id){return phrases().filter(p=>p.word===id);}
@@ -77,12 +77,13 @@ function renderChrome(){
   el('listening-list').setAttribute('aria-labelledby','bucket-'+view.bucket);
   el('block-loop').checked=view.loop;
   el('listen-translation').setAttribute('aria-pressed',view.mode==='words'?view.showWordTranslation:view.showTranslation);
+  el('listen-autoscroll').setAttribute('aria-pressed',String(view.autoscroll));
   el('listen-tempo-value').textContent=view.rate.toLocaleString('ru-RU',{minimumFractionDigits:1})+'×';
   renderPlayer();
 }
 function renderPlayer(){
   const visible=playerVisible(),selected=view.mode==='words'?selectedWordId:selectedId,record=audioRecord(view.mode,selected);
-  el('listening-footer').hidden=!visible;
+  el('listening-footer').hidden=false;
   el('listen-play').disabled=!visible||!record?.audio&&!session.id;
   el('listen-play').setAttribute('aria-label',session.playing?'Пауза':view.mode==='words'?'Слушать слова':'Слушать фразы');
   el('listen-play-icon').setAttribute('d',session.playing?'M7 5h4v14H7zM14 5h4v14h-4z':'m8 5 11 7-11 7z');
@@ -136,12 +137,12 @@ function renderRows(){
       row.addEventListener('click',()=>selectCard(item.id));
     }else{
       front.classList.add('word-listen-front');const available=view.bucket==='study'?LISTEN_PHRASES.filter(p=>p.word===item.id):wordPhrases(item.id);
-      row.dataset.unavailable=String(!available.length);row.setAttribute('aria-label',item.word+'. '+item.translation+'. '+actions.join('. '));
+      row.dataset.unavailable=String(!available.length);row.setAttribute('aria-label',item.word+'. '+(item.translation||'')+'. '+actions.join('. '));
       const info=document.createElement('div');const name=wordButton(item.word,null,item);name.classList.add('word-listen-name');
       info.append(name);
       if(item.translation){const meaning=document.createElement('div');meaning.className='word-listen-translation';meaning.textContent=item.translation;meaning.hidden=!view.showWordTranslation;info.append(meaning);}
       front.append(info);
-      row.addEventListener('click',()=>selectCard(firstWordPhrase(item.id)?.id||null,item.id));
+      row.addEventListener('click',()=>{selectCard(firstWordPhrase(item.id)?.id||null,item.id);if(!available.length)toast('Фразы для этого слова пока не подготовлены.');});
     }
     row.addEventListener('keydown',event=>{if(event.target===row&&['Enter',' '].includes((event.detail?.key||event.key))){event.preventDefault();selectCard(view.mode==='phrases'?item.id:(firstWordPhrase(item.id)?.id||null),view.mode==='words'?item.id:null);}});
     row.addEventListener('keydown',event=>{if((event.detail?.key||event.key)==='ArrowLeft'||(event.detail?.key||event.key)==='ArrowRight'){const to=destination(view.mode,view.bucket,(event.detail?.key||event.key)==='ArrowLeft'?-1:1);if(to){event.preventDefault();move(item.id,to);}}});
@@ -167,7 +168,7 @@ function move(id,to){
     const oldStatus=to==='cycle'?'study':'cycle';
     if(window.CycleContext){
       const result=window.WordRecallCycle.changeWord(window.WordRecallCycle.state,id,to==='cycle');
-      if(!result.ok)return;
+      if(!result.ok){toast(result.message);return;}
       if(to==='cycle')result.phraseIds.forEach(pid=>view.statuses[pid]='listen');
       lastMove={mode:'words',id,to:oldStatus,role:result.role};
     }else{
@@ -217,7 +218,7 @@ function schedule(fn,ms){clearPending();pending={fn,remaining:ms,started:Date.no
 function playerVisible(){return view.mode==='phrases'?view.bucket==='listen':view.bucket==='cycle';}
 function audioRecord(kind,id){return kind==='words'?spokenWordById[id]:phraseById[id];}
 function selectPlaybackItem(kind,id){if(kind==='words'){selectedWordId=id;selectedId=firstWordPhrase(id)?.id||null;}else{selectedId=id;selectedWordId=phraseById[id]?.word||null;}}
-function stop(){generation++;clearPending();sound.pause();session={playing:false,id:null,kind:view.mode,scope:'block',steps:[],step:0,ids:[]};el('listening-progress').style.width='0%';renderPlayer();updateActive();}
+function stop(){generation++;clearPending();sound.pause();session={playing:false,id:null,kind:view.mode,scope:'block',steps:[],step:0,ids:[]};renderPlayer();updateActive();}
 function pause(){
   session.playing=false;sound.pause();
   if(pending){clearTimeout(pending.timer);pending.remaining=Math.max(0,pending.remaining-(Date.now()-pending.started));pending.timer=null;}
@@ -248,7 +249,7 @@ async function playStep(){
   const token=++generation;clearPending();sound.pause();renderPlayer();updateActive();
   const row=el('listening-list').querySelector(`.listen-row[data-id="${session.id}"]`);
   if(view.autoscroll&&row){const list=el('listening-list'),top=row.offsetTop-(list.firstElementChild?.offsetTop||0);if(top<list.scrollTop || top+row.offsetHeight>list.scrollTop+list.clientHeight)list.scrollTo({top,behavior:'smooth'});}
-  el('listening-progress').style.width='0%';
+
   if(step.language==='ru'&&view.translation==='text'){schedule(completeStep,2000);return;}
   sound.src=step.language==='ru'?p.translationAudio:p.audio;sound.playbackRate=view.rate;
   try{await sound.play();if(token===generation&&!session.playing)sound.pause();}
@@ -268,10 +269,16 @@ function advanceItem(){
   const id=block[next%block.length];selectPlaybackItem(session.kind,id);session.id=id;session.steps=plan(session.kind);session.step=0;playStep();
 }
 sound.addEventListener('ended',()=>{if(session.playing)completeStep();});
-sound.addEventListener('timeupdate',()=>{if(Number.isFinite(sound.duration)&&sound.duration>0)el('listening-progress').style.width=(sound.currentTime/sound.duration*100)+'%';});
+
 el('listen-play').addEventListener('click',()=>session.playing?pause():resume());
 el('listen-translation').addEventListener('click',()=>{if(view.mode==='words')view.showWordTranslation=!view.showWordTranslation;else view.showTranslation=!view.showTranslation;renderChrome();updateActive();persist();});
-el('listen-tempo').addEventListener('click',()=>{const rates=[.75,.85,1,1.15,1.3];view.rate=rates[(rates.indexOf(view.rate)+1)%rates.length];sound.playbackRate=view.rate;renderChrome();persist();});
+el('listen-autoscroll').addEventListener('click',()=>{view.autoscroll=!view.autoscroll;renderChrome();persist();});
+el('listen-tempo').addEventListener('click',()=>{
+  const dialog=el('listen-rates'),options=el('listen-rate-options');options.replaceChildren();
+  for(const rate of [.75,.85,1,1.15,1.3]){const button=document.createElement('button');button.type='button';button.textContent=rate.toLocaleString('ru-RU')+'×';button.setAttribute('aria-pressed',String(view.rate===rate));button.addEventListener('click',()=>{view.rate=rate;sound.playbackRate=rate;renderChrome();persist();dialog.close();});options.append(button);}
+  dialog.showModal();
+});
+el('close-listen-rates').addEventListener('click',()=>el('listen-rates').close());
 document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>{stop();view.mode=button.dataset.mode;if(view.mode==='words'&&!['study','cycle'].includes(view.bucket))view.bucket='cycle';if(view.mode==='phrases'&&view.bucket==='study')view.bucket='cycle';render();el('listening-list').scrollTop=0;persist();}));
 document.querySelectorAll('[data-bucket]').forEach(button=>button.addEventListener('click',()=>{stop();view.bucket=button.dataset.bucket;render();el('listening-list').scrollTop=0;persist();}));
 for(const group of ['[data-mode]','[data-bucket]']){

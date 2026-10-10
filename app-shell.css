@@ -20,3 +20,11 @@
 body[data-nav=words] .tabs{gap:12px;justify-content:space-between}body[data-nav=words] .tabs button{font-size:12px;gap:4px}body[data-nav=words] .tabs button span{font-size:9px;min-width:18px;padding:2px 4px}
 body[data-nav=words] .add-to-cycle{margin-left:auto;flex-shrink:0;border:1px solid #b9c6bd;border-radius:7px;color:var(--green);font-size:10px;padding:6px 8px;background:var(--paper)}
 @media(max-width:350px){body[data-nav=words] .tabs{gap:5px}body[data-nav=words] .tabs button{font-size:11px}body[data-nav=words] .add-to-cycle{font-size:9px;padding:5px}}
+
+/* Two compact actions preserve the existing word-row height. */
+body[data-nav=words] .row-front{min-height:65px;gap:12px;padding-block:6px}
+body[data-nav=words] .word-name{min-width:0;overflow-wrap:anywhere;flex:1}
+body[data-nav=words] .word-actions{display:flex;flex-direction:column;flex-shrink:0;margin-left:auto}
+body[data-nav=words] .word-actions button{border:0;background:none;color:var(--green);font-size:12px;min-width:76px;height:25px;min-height:25px;padding:0 3px;text-align:left;border-radius:3px}
+body[data-nav=words] .word-row.drag-left .row-underlay{justify-content:flex-end}
+@media(max-width:350px){body[data-nav=words] .row-front{gap:8px}body[data-nav=words] .word-actions button{font-size:11px;min-width:70px}body[data-nav=words] .word-name{font-size:22px}}

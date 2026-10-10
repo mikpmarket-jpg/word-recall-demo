@@ -40,13 +40,6 @@ function playingUI() {
   get('main-play').setAttribute('aria-label', playing ? 'Пауза' : 'Слушать диктора');
   get('play-icon').setAttribute('d',playing ? 'M7 5h4v14H7zM14 5h4v14h-4z' : 'm8 5 11 7-11 7z');
 }
-function progress() {
-  const {start,end}=edges();
-  const elapsed=Math.max(0,audio.currentTime-start);
-  get('audio-progress-fill').style.width=Math.max(0,Math.min(100,elapsed/(end-start)*100))+'%';
-  get('scene-time').textContent=clock(elapsed);
-  get('playback-duration').textContent=clock(elapsed)+' / '+clock(Math.ceil(end-start));
-}
 function stop() { audio.pause(); previewOnly=false; playingUI(); }
 async function play(restart=false, preview=false) {
   previewOnly=preview;
@@ -67,7 +60,6 @@ function renderEdges() {
     const edge=button.dataset.edge, value=b[edge]+Number(button.dataset.delta);
     button.disabled=edge==='start' ? value<0 || value>b.end-.2 : value>Math.floor(p.duration*10)/10 || value<b.start+.2;
   });
-  progress();
 }
 function changeEdge(edge,value) {
   stop();
@@ -79,7 +71,7 @@ function changeEdge(edge,value) {
 }
 function openDictionary(token) {
   stop(); get('playback-status').textContent='Проясните значение слова';
-  const key=clean(token), entry=window.CycleContext?.definition(key,current().id)||definitions[key];
+  const key=clean(token), entry=definitionFor(key);
   if(!entry) return;
   get('dictionary-word').textContent=entry[0];
   get('definition-title').textContent=entry[1]; get('definition-description').textContent=entry[2];
@@ -88,6 +80,24 @@ function openDictionary(token) {
   get('definition-translation').textContent=current().translation;
   get('dictionary').showModal();
 }
+function definitionFor(token){return window.CycleContext?.definition(token,current().id)||(window.CYCLE_CORPUS?.context[current().id]?.[token]?[token,...window.CYCLE_CORPUS.context[current().id][token]]:null)||window.CYCLE_CORPUS?.definitions[token]||definitions[token]||[token,'Значение пока не подготовлено.',''];}
+function renderDefinitions(){
+  const studied=new Set([...(current().new||[]).map(clean),...(window.CycleContext?.words||[]).map(w=>w.id)]),seen=new Set(),list=get('inline-definitions');list.replaceChildren();
+  for(const token of current().tokens){
+    const key=clean(token),entry=definitionFor(key),lemma=entry[0];
+    if(seen.has(key)||!studied.has(key)&&!studied.has(lemma))continue;seen.add(key);
+    const row=document.createElement('div');row.className='inline-definition';
+    const word=document.createElement('button');word.type='button';word.className='inline-word';word.lang='en';word.textContent=key;word.setAttribute('aria-haspopup','dialog');word.addEventListener('click',()=>openDictionary(token));
+    if(key!==lemma){const form=document.createElement('small');form.className='inline-form';form.textContent='форма '+lemma;word.append(form);}
+    const copy=document.createElement('div');copy.className='inline-definition-copy';const meaning=document.createElement('strong');meaning.textContent=entry[1];copy.append(meaning);
+    if(entry[2]){const description=document.createElement('p');description.textContent=entry[2];copy.append(description);}
+    row.append(word,copy);list.append(row);
+  }
+}
+function renderHint(){const hint=get('clarification-hint'),hidden=window.WordRecallPreferences.read().hiddenHints.includes('clarification');hint.classList.toggle('is-hidden',hidden);hint.inert=hidden;if(hidden)hint.setAttribute('aria-hidden','true');else hint.removeAttribute('aria-hidden');}
+get('hide-clarification-hint').addEventListener('click',()=>{const prefs=window.WordRecallPreferences;if(!prefs.save({hiddenHints:[...new Set([...prefs.read().hiddenHints,'clarification'])]}))toast('Не удалось сохранить закрытие подсказки.');renderHint();});
+window.addEventListener('word-recall-preferences-change',renderHint);renderHint();
+function renderTranslation(){const text=get('phrase-translation');text.classList.toggle('is-hidden',!translated);text.setAttribute('aria-hidden',String(!translated));}
 function updateScrollMode() { requestAnimationFrame(()=>{window.fitCircleLayout?.();get('circle-body').classList.toggle('can-scroll',get('circle-body').scrollHeight>get('circle-body').clientHeight+2);}); }
 function renderPhrase() {
   window.CycleContext?.remember(index);
@@ -95,13 +105,13 @@ function renderPhrase() {
   get('phrase-text').replaceChildren();
   current().tokens.forEach(token=>{
     const button=document.createElement('button'); button.className='phrase-word';
-    if(current().new.map(clean).includes(clean(token))) button.classList.add('is-new');
+    if(current().new.map(clean).some(word=>word===clean(token)||word===definitionFor(clean(token))[0])) button.classList.add('is-new');
     button.textContent=token; button.setAttribute('aria-label',`Значение слова ${token.replace(/[?.!]/g,'')}`);
     button.setAttribute('aria-haspopup','dialog'); button.addEventListener('click',()=>openDictionary(token));
     get('phrase-text').append(button,document.createTextNode(' '));
   });
   get('phrase-translation').textContent=current().translation;
-  get('phrase-translation').hidden=!translated;
+  renderTranslation();renderDefinitions();
   audio.src=current().audio; audio.load();
   get('playback-status').textContent='';
   get('wave-bars').replaceChildren();
@@ -121,7 +131,7 @@ function navigate(delta) {
 }
 if(CIRCLE_PHRASES.length){
 get('main-play').addEventListener('click',()=>{ if(audio.paused) play(); else { stop(); get('playback-status').textContent='Пауза'; } });
-get('toggle-translation').addEventListener('click',()=>{ translated=!translated; get('phrase-translation').hidden=!translated; get('toggle-translation').setAttribute('aria-pressed',translated); updateScrollMode(); });
+get('toggle-translation').addEventListener('click',()=>{ translated=!translated; renderTranslation(); get('toggle-translation').setAttribute('aria-pressed',translated); updateScrollMode(); });
 get('change-tempo').addEventListener('click',()=>{ rateIndex=(rateIndex+1)%rates.length; audio.playbackRate=rates[rateIndex]; get('tempo-value').textContent=rates[rateIndex].toLocaleString('ru-RU',{minimumFractionDigits:1})+'×'; });
 get('loop-phrase').addEventListener('click',()=>{ loop=!loop; get('loop-phrase').setAttribute('aria-pressed',loop); });
 get('close-dictionary').addEventListener('click',()=>get('dictionary').close());
@@ -136,14 +146,14 @@ get('demo-prev').addEventListener('click',()=>navigate(-1)); get('demo-next').ad
 ['first','many','all'].forEach((id,i)=>get('demo-'+id).addEventListener('click',()=>{index=i;renderPhrase();}));
 audio.addEventListener('play',()=>{playingUI();get('playback-status').textContent=previewOnly?'Проверка фрагмента':'Слушайте диктора';});
 audio.addEventListener('pause',playingUI);
-audio.addEventListener('loadedmetadata',()=>{audio.currentTime=edges().start;progress();});
+audio.addEventListener('loadedmetadata',()=>{audio.currentTime=edges().start;});
 function finishClip() {
   if(audio.paused) return;
   if(loop && !previewOnly) { audio.currentTime=edges().start; return; }
   audio.pause(); audio.currentTime=edges().end; previewOnly=false;
-  get('playback-status').textContent='Теперь произнесите фразу вслух'; progress();
+  get('playback-status').textContent='Теперь произнесите фразу вслух';
 }
-audio.addEventListener('timeupdate',()=>{progress();if(audio.currentTime>=edges().end-.03)finishClip();});
+audio.addEventListener('timeupdate',()=>{if(audio.currentTime>=edges().end-.03)finishClip();});
 audio.addEventListener('ended',()=>{if(loop && !previewOnly)play(true);else{previewOnly=false;get('playback-status').textContent='Теперь произнесите фразу вслух';}});
 audio.addEventListener('error',()=>{get('playback-status').textContent='Запись недоступна';});
 let gesture=null, suppressClick=false;

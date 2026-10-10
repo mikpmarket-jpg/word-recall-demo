@@ -1,0 +1,38 @@
+/* Approved learning layouts, scoped to the revised screens. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.five-controls{grid-template-columns:repeat(5,minmax(0,1fr));border-radius:40px;gap:2px;padding:9px 8px}
+.five-controls .pill-tool{min-width:0;width:100%;min-height:51px;padding:2px;gap:5px;font-size:9px;color:var(--green)}
+.five-controls .pill-tool svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.five-controls .pill-tool strong{font-size:16px;font-weight:600}
+.five-controls .main-play{width:54px;height:54px}
+.five-controls .pill-tool[aria-pressed=true]{font-weight:650}
+.five-controls #listen-autoscroll[aria-pressed=false]{color:var(--muted)}
+.listening-phone .listening-footer{border-top:0;padding:8px 12px max(14px,env(safe-area-inset-bottom))}
+.listening-phone .listen-toast{bottom:110px}
+.clarification-page .circle-phone .circle-body{padding-bottom:18px;touch-action:pan-y}
+.clarification-page .scene-placeholder{touch-action:none}
+.clarification-page .circle-phone .phrase-section{padding:18px 0 0}
+.clarification-page .circle-phone .phrase-text{font-size:26px;line-height:1.4;text-wrap:initial}
+.clarification-page .phrase-word{padding:0 1px;margin:0;letter-spacing:inherit}
+.clarification-page .translation-slot{padding-top:8px;min-height:56px}
+.clarification-page .circle-phone .phrase-translation{margin:0;font-size:14px;line-height:1.5;color:var(--muted)}
+.is-hidden{visibility:hidden;pointer-events:none}
+.inline-definitions{padding:0 4px 8px}
+.inline-definition{display:flex;align-items:baseline;gap:16px;padding:13px 0;border-top:1px solid var(--line)}
+.inline-definition:first-child{border-top:0;padding-top:0}
+.inline-word{font:400 26px/1.25 Georgia,serif;flex:0 0 80px;min-width:0;text-align:left;padding:0;overflow-wrap:anywhere}
+.inline-form{display:block;font:11px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--muted);margin-top:4px}
+.inline-definition-copy{min-width:0;flex:1;font-size:15px;line-height:1.5}
+.inline-definition-copy strong{font-weight:650}
+.inline-definition-copy p{color:var(--muted);font-size:13px;line-height:1.5;margin:5px 0 0}
+.clarification-page .circle-phone .circle-footer{border-top:0;padding:8px 12px max(14px,env(safe-area-inset-bottom))}
+.hint-slot{padding:0 8px 12px}
+.hint-chip{position:relative;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:12px 36px 12px 14px;min-height:88px}
+.hint-chip .tiny-label{font-size:9px;letter-spacing:.13em}
+.hint-chip>button{position:absolute;right:3px;top:3px;width:34px;height:34px;font-size:23px;color:var(--muted)}
+.hint-chip>p{font-size:12px;line-height:1.5;margin:7px 0 0;color:var(--ink)}
+.clarification-page .circle-phone .circle-toast{bottom:195px}
+@media(max-width:350px){.clarification-page .circle-phone .phrase-text{font-size:24px}.inline-definition{gap:12px}.inline-word{font-size:24px;flex-basis:70px}.hint-slot{padding-inline:6px}.five-controls .pill-tool{font-size:8px}.five-controls .main-play{width:48px;height:48px}}
+
+.listening-rates{border:1px solid var(--line);border-radius:24px;padding:20px;max-width:390px;background:var(--paper);color:var(--ink)}
+.listening-rates header{display:flex;align-items:center;justify-content:space-between;gap:12px}.listening-rates h2{font:400 25px Georgia,serif;margin:0}.listening-rates header button{width:40px;height:40px;font-size:25px}.listening-rates #listen-rate-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.listening-rates #listen-rate-options button{padding:12px;border:1px solid var(--line);border-radius:10px;font-size:13px}.listening-rates #listen-rate-options button[aria-pressed=true]{background:var(--green);color:var(--paper)}

@@ -3,19 +3,20 @@
 <head>
 <script src="app-data-mode.js?v=20261010-service-panel"></script>
 <script src="test-fixture.js?v=20261010-service-panel"></script>
-<script src="app-preferences.js?v=20261010-service-panel"></script>
+<script src="app-preferences.js?v=20261010-approved-learning"></script>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fbf9f4"><title>Word Recall · Первый круг</title>
   <link rel="stylesheet" href="styles.css?v=20261008-mobile-night"><link rel="stylesheet" href="circle-1.css">
-  <script src="circle-data.js?v=20261007-cleanup" defer></script><script src="cycle-corpus.js?v=20261007-cleanup" defer></script><script src="cycle-store.js?v=20261010-service-panel" defer></script><script src="cycle-bridge.js?v=20261008-home" defer></script><script src="circle-1.js?v=20261008-clean-ui" defer></script>
-  <link rel="stylesheet" href="circle-layout.css?v=layout-3"><script src="circle-layout.js?v=20261007-cleanup" defer></script>
+  <script src="circle-data.js?v=20261007-cleanup" defer></script><script src="cycle-corpus.js?v=20261007-cleanup" defer></script><script src="cycle-store.js?v=20261010-approved-learning" defer></script><script src="cycle-bridge.js?v=20261008-home" defer></script><script src="circle-1.js?v=20261010-approved-learning" defer></script>
+  <link rel="stylesheet" href="circle-layout.css?v=layout-3"><script src="circle-layout.js?v=20261010-approved-learning" defer></script>
   <link rel="stylesheet" href="cycle.css?v=20261007-cycle">
 <link rel="stylesheet" href="screen-header.css"><link rel="stylesheet" href="app-spacing.css">
 <link rel="stylesheet" href="app-preferences.css?v=20261010-service-panel">
 <link rel="stylesheet" href="app-guidance.css?v=20261008-clean-ui">
-<script src="app-guidance.js?v=20261008-clean-ui" defer></script>
+<script src="app-guidance.js?v=20261010-approved-learning" defer></script>
+<link rel="stylesheet" href="learning-revision.css?v=20261010-approved-learning">
 </head>
-<body>
+<body class="clarification-page">
   <div class="workspace">
     <aside class="notes">
       <a class="project-name" href="words.html">WORD RECALL <span>02</span></a>
@@ -41,7 +42,6 @@
             <span class="scene-caption">ФРАЗА БЕЗ ВИДЕО</span>
             <svg class="scene-icon" viewBox="0 0 64 48" aria-hidden="true"><rect x="4" y="5" width="44" height="38" rx="7"/><path d="m48 18 12-7v26l-12-7M21 17l12 7-12 7z"/></svg>
             <p>Сцены пока нет</p>
-            <div class="scene-footer"><span id="scene-source">Дикторская озвучка</span><span id="scene-time">0:00</span></div>
           </div>
           <details class="sync-panel" id="sync-panel">
             <summary><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h7m5 0h4M4 17h3m5 0h8"/><circle cx="13.5" cy="7" r="2.5"/><circle cx="9.5" cy="17" r="2.5"/></svg>Подстроить границы</span><span class="sync-chevron" aria-hidden="true">⌄</span></summary>
@@ -54,17 +54,24 @@
         </section>
         <section class="phrase-section" aria-label="Фраза и её значение">
           <div class="phrase-text" id="phrase-text" lang="en"></div>
-          <p class="phrase-translation" id="phrase-translation" hidden></p>
+          <div class="translation-slot"><p class="phrase-translation is-hidden" id="phrase-translation" aria-hidden="true"></p></div>
 
         </section>
-        <section class="task"><span class="tiny-label">ВАША ЗАДАЧА</span><p>Проясните слова и смысл фразы.<br>Прослушайте и произнесите вслух.</p>
-          <div class="phrase-tools"><button id="original-audio" disabled title="Для этой фразы нет оригинальной записи"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 4 9H1v6h3l5 4zM13 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg>Оригинал</button><button id="loop-phrase" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V5h13l3 3m0-3v4H7M20 15v4H7l-3-3m0 3v-4h13"/></svg>Зациклить</button></div>
-        </section>
+        <section class="inline-definitions" id="inline-definitions" aria-label="Значения изучаемых слов"></section>
       </div>
       <footer class="circle-footer">
-        <div class="playback-line"><span id="playback-status" role="status"></span><span id="playback-duration"></span></div>
-        <div class="audio-progress" aria-hidden="true"><span id="audio-progress-fill"></span></div>
-        <div class="audio-pill"><button class="pill-tool" id="toggle-translation" aria-pressed="false"><span class="translate-icon" aria-hidden="true">A<span>я</span></span><span>Перевод</span></button><button class="main-play" id="main-play" aria-label="Слушать диктора"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="play-icon" d="m8 5 11 7-11 7z"/></svg></button><button class="pill-tool" id="change-tempo" aria-label="Изменить темп"><strong id="tempo-value">1,0×</strong><span>Темп</span></button></div>
+        <span id="playback-status" class="sr-only" role="status"></span>
+        <div class="hint-slot"><div class="hint-chip" id="clarification-hint">
+          <span class="tiny-label">ВАША ЗАДАЧА</span><button id="hide-clarification-hint" aria-label="Скрыть подсказку на всех экранах прояснения">×</button>
+          <p>Проясните слово<br>Прослушайте и произнесите вслух фразу.</p>
+        </div></div>
+        <div class="audio-pill five-controls">
+          <button class="pill-tool" id="original-audio" disabled title="Для этой фразы нет оригинальной записи"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 4 9H1v6h3l5 4zM13 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg><span>Оригинал</span></button>
+          <button class="pill-tool" id="change-tempo" aria-label="Изменить темп"><strong id="tempo-value">1,0×</strong><span>Темп</span></button>
+          <button class="main-play" id="main-play" aria-label="Слушать диктора"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="play-icon" d="m8 5 11 7-11 7z"/></svg></button>
+          <button class="pill-tool" id="toggle-translation" aria-pressed="false"><span class="translate-icon" aria-hidden="true">A<span>я</span></span><span>Перевод</span></button>
+          <button class="pill-tool" id="loop-phrase" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V5h13l3 3m0-3v4H7M20 15v4H7l-3-3m0 3v-4h13"/></svg><span>Зациклить</span></button>
+        </div>
       </footer>
       <div class="circle-toast" id="circle-toast" role="status" hidden></div>
     </main>

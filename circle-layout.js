@@ -8,6 +8,7 @@ window.fitCircleLayout=function(){
   phone.style.removeProperty('--circle-scene-height');
   const scene=body.querySelector('.scene-placeholder:not([hidden]),.scene-player:not([hidden])');
   if(!scene)return;
+  if(document.body.classList.contains('clarification-page')){phone.style.setProperty('--circle-scene-height',Math.max(100,Math.min(210,Math.round(phone.clientHeight*.22)))+'px');body.classList.toggle('can-scroll',body.scrollHeight>body.clientHeight+1);return;}
   for(let level=0;level<3;level++){
     phone.classList.toggle('fit-compact',level>0);
     phone.classList.toggle('fit-tight',level>1);

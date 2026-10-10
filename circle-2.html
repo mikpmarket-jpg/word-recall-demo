@@ -3,15 +3,16 @@
 <head>
 <script src="app-data-mode.js?v=20261010-service-panel"></script>
 <script src="test-fixture.js?v=20261010-service-panel"></script>
-<script src="app-preferences.js?v=20261010-service-panel"></script>
+<script src="app-preferences.js?v=20261010-approved-learning"></script>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#fbf9f4">
   <title>Word Recall · Аудирование</title><link rel="stylesheet" href="styles.css?v=20261008-mobile-night"><link rel="stylesheet" href="circle-1.css"><link rel="stylesheet" href="circle-2.css?v=clean-cards-1">
-  <script src="circle-2-data.js?v=20261007-cleanup" defer></script><script src="cycle-corpus.js?v=20261007-cleanup" defer></script><script src="cycle-store.js?v=20261010-service-panel" defer></script><script src="cycle-bridge.js?v=20261008-home" defer></script><script src="learning-ui.js?v=20261008-scenarios" defer></script><script src="app.js?v=20261010-service-panel" defer></script><script src="circle-2.js?v=20261007-cleanup" defer></script><script src="learning-settings.js?v=20261008-clean-ui" defer></script>
+  <script src="circle-2-data.js?v=20261007-cleanup" defer></script><script src="cycle-corpus.js?v=20261007-cleanup" defer></script><script src="cycle-store.js?v=20261010-approved-learning" defer></script><script src="cycle-bridge.js?v=20261008-home" defer></script><script src="learning-ui.js?v=20261010-approved-learning" defer></script><script src="app.js?v=20261010-approved-learning" defer></script><script src="circle-2.js?v=20261010-approved-learning" defer></script><script src="learning-settings.js?v=20261008-clean-ui" defer></script>
   <link rel="stylesheet" href="cycle.css?v=20261007-cycle"><link rel="stylesheet" href="learning-controls.css?v=20261007-counts2">
 <link rel="stylesheet" href="screen-header.css"><link rel="stylesheet" href="app-spacing.css">
 <link rel="stylesheet" href="app-preferences.css?v=20261010-service-panel">
 <link rel="stylesheet" href="app-guidance.css?v=20261008-clean-ui">
-<script src="app-guidance.js?v=20261008-clean-ui" defer></script>
+<script src="app-guidance.js?v=20261010-approved-learning" defer></script>
+<link rel="stylesheet" href="learning-revision.css?v=20261010-approved-learning">
 </head>
 <body>
 <div class="workspace">
@@ -19,9 +20,9 @@
     <a class="project-name" href="words.html">WORD RECALL <span>03</span></a>
     <nav class="prototype-nav" aria-label="Экраны прототипа"><a href="words.html">Слова</a><a href="cycle.html">Цикл</a><a href="circle-1.html">Круг 1</a><a href="circle-2.html" aria-current="page">Круг 2</a><a href="circle-3.html">Круг 3</a><a href="circle-4.html">Круг 4</a></nav>
     <div class="edition">ЭКСПЕРИМЕНТАЛЬНЫЙ ПРОТОТИП</div><h1>Слушать.<br>Узнавать.<br>Понимать.</h1><p class="intro">Небольшой набор фраз для знакомства со звучанием.</p>
-    <div class="reference"><span class="tiny-label">ВТОРОЙ КРУГ</span><h2>Аудирование</h2><p>В режиме «Слова» переносите слова из «Изучаю» в «Текущий цикл». В режиме «Фразы» виден весь материал цикла; фразы можно включать в аудирование и вручную отмечать прослушанными.</p></div>
+    <div class="reference"><span class="tiny-label">ВТОРОЙ КРУГ</span><h2>Аудирование</h2><p>В режиме «Слова» переносите слова из «Новые» в «Изучаю». В режиме «Фразы» виден весь материал цикла; фразы можно включать в аудирование и вручную отмечать прослушанными.</p></div>
     <details class="demo-panel"><summary>Варианты для проверки <span>＋</span></summary><p>Тестовые наборы для проверки макета. Настройки прослушивания открываются по кнопке наушников.</p>
-      <div class="demo-buttons"><button id="demo-sample">Показать тестовый набор</button><button id="demo-real">Вернуться к моему «Изучаю»</button><button id="demo-reset">Начальное состояние круга 2</button></div>
+      <div class="demo-buttons"><button id="demo-sample">Показать тестовый набор</button><button id="demo-real">Вернуться к моим новым словам</button><button id="demo-reset">Начальное состояние круга 2</button></div>
     </details>
     <p class="prototype-note">Числа и последовательности — примеры. Материал готов для трёх слов: time, way, day. Дикторский звук синтезирован локально; переводы подготовлены вручную как примеры будущего результата ИИ. Подбор под уровень, сервер и ИИ не подключены.</p>
     
@@ -30,17 +31,22 @@
     <header class="circle-header screen-header">
         <a class="exit-circle header-back" href="cycle.html" aria-label="Вернуться на экран «Цикл обучения»">‹</a>
         <h2 class="header-title">Аудирование</h2>
-        <div class="header-actions"><button class="headphone-symbol" id="listen-settings" aria-label="Настройки прослушивания" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-3a8 8 0 0 1 16 0v3M4 12H2v7h5v-7H4m16 0h2v7h-5v-7h3"/></svg></button></div>
+        <span class="header-actions" aria-hidden="true"></span>
       </header>
     <div class="listening-top">
       <div class="material-switch" role="tablist" aria-label="Материал"><button id="mode-words" role="tab" aria-selected="false" data-mode="words">Слова</button><button id="mode-phrases" role="tab" aria-selected="true" data-mode="phrases">Фразы</button></div>
-      <div class="listen-tabs" role="tablist" aria-label="Список материала"><button role="tab" id="bucket-study" data-bucket="study" aria-selected="false" hidden>Изучаю <span id="count-study"></span></button><button role="tab" id="bucket-cycle" data-bucket="cycle" aria-selected="false">Текущий цикл <span id="count-cycle"></span></button><button role="tab" id="bucket-listen" data-bucket="listen" aria-selected="true">Аудирование <span id="count-listen"></span></button><button role="tab" id="bucket-heard" data-bucket="heard" aria-selected="false">Прослушано <span id="count-heard"></span></button></div>
+      <div class="listen-tabs" role="tablist" aria-label="Список материала"><button role="tab" id="bucket-study" data-bucket="study" aria-selected="false" hidden>Новые <span id="count-study"></span></button><button role="tab" id="bucket-cycle" data-bucket="cycle" aria-selected="false">Изучаю <span id="count-cycle"></span></button><button role="tab" id="bucket-listen" data-bucket="listen" aria-selected="true">Аудирование <span id="count-listen"></span></button><button role="tab" id="bucket-heard" data-bucket="heard" aria-selected="false">Прослушано <span id="count-heard"></span></button></div>
     </div>
     <div class="listening-list" id="listening-list" role="tabpanel" aria-labelledby="bucket-listen"></div>
     <footer class="listening-footer" id="listening-footer">
-      <div class="playback-line" id="listening-playback" hidden><span id="listening-status" role="status"></span><span id="listening-position"></span></div>
-      <div class="audio-progress" aria-hidden="true"><span id="listening-progress"></span></div>
-      <div class="audio-pill"><button class="pill-tool" id="listen-translation" aria-pressed="false"><span class="translate-icon" aria-hidden="true">A<span>я</span></span><span>Перевод ИИ</span></button><button class="main-play" id="listen-play" aria-label="Слушать набор"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="listen-play-icon" d="m8 5 11 7-11 7z"/></svg></button><button class="pill-tool" id="listen-tempo" aria-label="Изменить темп"><strong id="listen-tempo-value">1,0×</strong><span>Темп</span></button></div>
+      <div class="sr-only" id="listening-playback" hidden><span id="listening-status" role="status"></span><span id="listening-position"></span></div>
+      <div class="audio-pill five-controls">
+        <button class="pill-tool" id="listen-autoscroll" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3H3v16h10v-3M17 3v17m-4-4 4 4 4-4"/></svg><span>Автоскролл</span></button>
+        <button class="pill-tool" id="listen-tempo" aria-label="Изменить скорость" aria-haspopup="dialog"><strong id="listen-tempo-value">1,0×</strong><span>Скорость</span></button>
+        <button class="main-play" id="listen-play" aria-label="Слушать набор"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="listen-play-icon" d="m8 5 11 7-11 7z"/></svg></button>
+        <button class="pill-tool" id="listen-translation" aria-pressed="false"><span class="translate-icon" aria-hidden="true">A<span>я</span></span><span>Перевод</span></button>
+        <button class="pill-tool" id="listen-settings" aria-label="Настройки прослушивания" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h7m5 0h6M3 12h3m5 0h10M3 18h11m5 0h2"/><circle cx="12.5" cy="6" r="2.5"/><circle cx="8.5" cy="12" r="2.5"/><circle cx="16.5" cy="18" r="2.5"/></svg><span>Настройки</span></button>
+      </div>
     </footer>
     <div class="toast listen-toast" id="listen-toast" role="status" hidden><span id="listen-toast-text"></span><button id="listen-undo" hidden>Отменить</button><button id="listen-dismiss" aria-label="Закрыть уведомление">×</button></div>
   </main>
@@ -49,6 +55,7 @@
 <dialog class="dictionary-sheet" id="listen-dictionary" aria-labelledby="listen-dictionary-word">
   <div class="dictionary-content"><span class="grab" aria-hidden="true"></span><div class="dictionary-heading"><div><span class="tiny-label" id="listen-dictionary-context">ЗНАЧЕНИЕ В ЭТОЙ ФРАЗЕ</span><h2 id="listen-dictionary-word" lang="en"></h2></div><button class="close" id="close-listen-dictionary" aria-label="Закрыть словарь">×</button></div><div class="definition-block"><h3 id="listen-definition-title"></h3><p id="listen-definition-description"></p></div><blockquote id="listen-definition-example" lang="en"></blockquote><p class="definition-translation" id="listen-definition-translation"></p></div>
 </dialog>
+<dialog id="listen-rates" class="listening-rates" aria-labelledby="listen-rates-title"><header><h2 id="listen-rates-title">Скорость</h2><button id="close-listen-rates" aria-label="Закрыть выбор скорости">×</button></header><div id="listen-rate-options"></div></dialog>
 <audio id="listening-audio" preload="metadata"></audio>
 </body>
 </html>

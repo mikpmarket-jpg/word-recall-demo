@@ -10,7 +10,7 @@
       <div class="add-controls" aria-describedby="add-availability"><div class="quantity"><button id="batch-minus" aria-label="Уменьшить партию">−</button><input id="batch" aria-label="Количество слов в партии" type="number" step="1" min="1" max="1000" value="10"><button id="batch-plus" aria-label="Увеличить партию">+</button></div><button class="primary add-button" id="add-words">Добавить <span id="batch-label">10</span><span aria-hidden="true">↗</span></button></div>
       <p class="add-availability" id="add-availability" role="status"></p>
       ${showVocabulary?`<button class="cycle-settings-link" id="open-cycle-settings" aria-haspopup="dialog"><span>Настроить цикл обучения</span>${settingsIcon}</button>`:''}
-      ${showVocabulary?`<dl class="vocabulary-counts" aria-label="Состав словарного запаса"><div><dt>Изучаю</dt><dd data-vocabulary-count="learn"></dd></div><div><dt>Текущий цикл</dt><dd data-vocabulary-count="cycle"></dd></div><div><dt>Знаю</dt><dd data-vocabulary-count="known"></dd></div></dl><a class="vocabulary-link" id="open-cycle-words" href="words.html">Все слова словарного запаса <span aria-hidden="true">→</span></a>`:''}
+      ${showVocabulary?`<dl class="vocabulary-counts" aria-label="Состав словарного запаса"><div><dt>Новые</dt><dd data-vocabulary-count="learn"></dd></div><div><dt>Изучаю</dt><dd data-vocabulary-count="cycle"></dd></div><div><dt>Знаю</dt><dd data-vocabulary-count="known"></dd></div></dl><a class="vocabulary-link" id="open-cycle-words" href="words.html">Все слова словарного запаса <span aria-hidden="true">→</span></a>`:''}
     </section>`;
   if(document.querySelector('[data-word-add-panel]')&&!document.getElementById('toast')){
     const toast=document.createElement('div');toast.id='toast';toast.className='toast';toast.hidden=true;toast.setAttribute('role','status');
@@ -26,7 +26,7 @@
           <h3 class="settings-section-title" id="new-words-title">Новые слова</h3>
           <label class="setting-row"><span><strong>Добавлять новых слов в день</strong><small>Сколько новых слов вы получаете для изучения каждый день</small></span><input id="daily-limit" type="number" min="1" max="1000" required></label>
           <label class="switch-row"><span><strong>Добавлять автоматически</strong><small>Система сама добавляет новые слова для изучения</small></span><input id="auto-enabled" class="switch" type="checkbox"></label>
-          <label class="setting-row"><span><strong>Максимальное количество слов в «Изучаю»</strong><small>Сколько новых слов можно накопить, ещё не изучив</small></span><input id="capacity" type="number" min="1" max="1000" required></label>
+          <label class="setting-row"><span><strong>Максимальное количество слов в «Новые»</strong><small>Сколько новых слов можно накопить, ещё не изучив</small></span><input id="capacity" type="number" min="1" max="1000" required></label>
         </section>
         <section class="settings-section grammar-section" aria-labelledby="grammar-title">
           <h3 class="settings-section-title" id="grammar-title">Грамматика</h3>

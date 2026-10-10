@@ -23,7 +23,7 @@
     }
     const actions=phone.querySelector('.video-actions');
     if(actions&&actions.querySelector('button:disabled'))note(actions.parentElement,'unavailable-material','Этот материал пока недоступен.',page==='catalog.html'&&params.get('section')==='topics'?'catalog.html?section=topics':'catalog.html','Выбрать другой материал');
-    const rounds=document.getElementById('cycle-rounds');if(rounds&&!window.WordRecallCycle?.state.phraseIds.length)note(rounds,'empty-cycle','В цикле пока нет фраз для занятия. Добавьте слова и выберите их в словарном запасе.','words.html','Открыть словарный запас');
+    const rounds=document.getElementById('cycle-rounds');if(rounds&&!window.WordRecallCycle?.state.phraseIds.length)note(rounds,'empty-cycle',window.WordRecallCycle?.state.words.length?'Слова выбраны для изучения. Фразы для них пока не подготовлены.':'В «Изучаю» пока нет слов. Добавьте слова и выберите их в словарном запасе.','words.html','Открыть словарный запас');
   }
   new MutationObserver(refresh).observe(phone,{childList:true,subtree:true});refresh();
 })();

@@ -12,6 +12,7 @@
     for(const b of document.querySelectorAll('button[data-theme]'))b.setAttribute('aria-pressed',b.dataset.theme===p.theme);
     if($('demo-plan'))$('demo-plan').value=s.paid?'paid':'free';if($('demo-account'))$('demo-account').value=s.signedIn?'in':'out';if($('demo-content'))$('demo-content').checked=s.content;
     $('account-summary').textContent=s.signedIn?'Выполнен вход':'Войти';$('plan-summary').textContent=s.paid?'Платная':'Бесплатная';
+    $('show-hints').checked=p.hiddenHints.length===0;
     $('dictionary-summary').textContent=s.dictionaryEnabled?s.dictionary:'';
   }
   function fit(){const r=document.querySelector('.phone').getBoundingClientRect(),top=Math.max(8,r.top+44),bottom=Math.min(innerHeight,r.bottom);dialog.style.setProperty('--sheet-left',Math.max(0,r.left)+'px');dialog.style.setProperty('--sheet-width',r.width+'px');dialog.style.setProperty('--sheet-top',top+'px');dialog.style.setProperty('--sheet-height',Math.max(180,bottom-top)+'px');}
@@ -61,6 +62,8 @@
   }
   document.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b){if(b.dataset.open==='onboarding')step=0;open(b.dataset.open);}});
   for(const b of document.querySelectorAll('button[data-theme]'))b.onclick=()=>{if(!P.save({theme:b.dataset.theme}))status('Не удалось сохранить оформление.');render();};
+  $('show-hints').onchange=e=>{if(!P.save({hiddenHints:e.target.checked?[]:['clarification']}))status('Не удалось сохранить настройку подсказок.');render();};
+  window.addEventListener('word-recall-preferences-change',render);
   $('close-sheet').onclick=close;window.addEventListener('resize',()=>{if(dialog.open)fit();});
   dialog.addEventListener('cancel',e=>{if(dialog.dataset.view==='onboarding'&&launchFlow){e.preventDefault();close();}});
   $('dictionary-file').onchange=e=>{const file=e.target.files[0];if(file&&demo({dictionary:file.name,dictionaryEnabled:true})){open('dictionaries');}e.target.value='';};
