@@ -1,0 +1,21 @@
+.catalog-filter-sheet{position:fixed;inset:auto 0 0;width:min(430px,100%);max-width:none;max-height:90dvh;margin:0 auto;border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;background:var(--paper);padding:0;color:var(--ink)}
+.catalog-filter-sheet::backdrop{background:#242b2666;backdrop-filter:blur(3px)}
+.catalog-filter-sheet form{display:flex;flex-direction:column;max-height:90dvh;margin:0}
+.filter-sheet-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px 10px;border-bottom:1px solid var(--line);flex-shrink:0}
+.filter-sheet-header h2{font:400 24px/1.2 Georgia,serif;margin:0}
+.filter-sheet-close{width:44px;height:44px;border-radius:50%;color:var(--muted);font-size:27px}
+.filter-sheet-body{overflow:auto;min-height:0;padding:4px 20px 18px;overscroll-behavior:contain}
+.filter-sheet-body fieldset{border:0;padding:0;margin:18px 0 0;min-width:0}
+.filter-sheet-body legend{font-size:14px;font-weight:650;margin-bottom:10px;padding:0}
+.filter-options{display:flex;flex-wrap:wrap;gap:7px}
+.filter-options label{position:relative;cursor:pointer}
+.filter-options input{position:absolute;opacity:0;width:1px;height:1px}
+.filter-options span{display:grid;place-items:center;min-height:40px;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:#fffefa;font-size:13px;line-height:1.3;color:#67665f}
+.filter-options input:checked+span{background:#e8eee5;border-color:#829b87;color:var(--green);font-weight:600}
+.filter-options input:focus-visible+span{outline:2px solid var(--green);outline-offset:2px}
+.filter-sheet-footer{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;padding:14px 20px max(18px,env(safe-area-inset-bottom));border-top:1px solid var(--line);flex-shrink:0}
+.filter-sheet-footer button{min-height:46px;border-radius:10px;font-size:14px;font-weight:600}
+.filter-reset{border:1px solid var(--line);color:var(--green)}
+.filter-apply{background:var(--green);color:white}
+.catalog-icon[data-active=true]{position:relative;background:var(--soft)}
+.catalog-icon[data-active=true]::after{content:'';position:absolute;right:5px;top:5px;width:6px;height:6px;border-radius:50%;background:var(--green)}

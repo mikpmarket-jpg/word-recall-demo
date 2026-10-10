@@ -1,0 +1,29 @@
+
+.speech-body{flex:1;min-height:0;display:grid;grid-template-rows:max-content max-content max-content;align-content:start;gap:26px;padding:clamp(18px,4dvh,34px) 28px 18px;touch-action:none;overflow-y:auto;overscroll-behavior:contain}
+.speech-body>section{flex-shrink:0}
+.speech-word-block{text-align:center}
+.speech-word-label{display:block;font-size:11px;letter-spacing:.03em;color:var(--muted)}
+.speech-word{font:400 44px/1.2 Georgia,"Times New Roman",serif;color:var(--green);letter-spacing:-.8px;margin:12px 0 0;overflow-wrap:anywhere}
+.speech-word-translation{font-size:14px;line-height:1.5;color:var(--muted);margin:8px 0 0;min-height:1.5em;visibility:hidden}
+.speech-task{border-top:1px solid var(--line);padding-top:20px;text-align:center}
+.speech-task .tiny-label{font-size:8px;letter-spacing:.16em}
+.speech-task p{font-size:15px;line-height:1.6;color:#55534e;margin:10px 0 0;text-wrap:balance}
+.speech-hint{visibility:hidden;background:var(--soft);padding:16px;border-radius:14px}
+.hint-phrase{font:400 20px/1.45 Georgia,"Times New Roman",serif;letter-spacing:-.2px;margin:0;min-height:2.9em;text-wrap:balance}
+.hint-translation{font-size:14px;line-height:1.5;color:var(--muted);margin:10px 0 0;min-height:3em;visibility:hidden}
+.hint-controls{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:8px;margin-top:12px}
+.hint-controls button{display:flex;justify-content:center;align-items:center;gap:6px;min-height:36px;padding:0 8px;border:1px solid #d9d5cb;border-radius:18px;color:var(--muted);font-size:10px;white-space:nowrap}
+.hint-controls button svg{width:12px;height:12px;fill:currentColor;stroke:none}
+.hint-controls button[aria-pressed=true]{color:var(--green);border-color:#1e463660}
+.speech-phone .speech-footer{border-top:0;padding-top:8px}
+.speech-help-row{display:flex;justify-content:center;margin-bottom:12px}
+.speech-help-row button{width:164px;display:flex;justify-content:center;align-items:center;gap:6px;min-height:36px;padding:0 16px;border:1px solid var(--line);border-radius:20px;font-size:11px;color:var(--muted)}
+.speech-help-row button svg{width:14px;height:14px;stroke-width:1.4}
+.speech-help-row button[aria-expanded=true]{color:var(--green);background:var(--soft)}
+.speech-phone .circle-toast{bottom:140px}
+@media(max-height:700px){.speech-body{gap:16px;padding:18px 24px 12px}.speech-word{font-size:38px;margin-top:8px}.speech-task{padding-top:14px}.speech-task p{font-size:14px;margin-top:8px}.speech-hint{padding:12px}.hint-phrase{font-size:18px}.hint-controls{margin-top:8px}.hint-translation{margin-top:8px}}
+@media(max-height:600px){.speech-body{gap:10px;padding:12px 20px 8px}.speech-word{font-size:36px}.speech-word-translation{font-size:13px;margin-top:6px}.speech-task{padding-top:12px}.speech-task p{font-size:13px;line-height:1.5}.speech-hint{padding:10px}.hint-phrase{font-size:17px}.hint-translation{font-size:13px}.speech-phone .speech-footer{padding-top:6px;padding-bottom:12px}.speech-help-row{margin-bottom:8px}.speech-help-row button{min-height:32px}}
+
+/* Visibility reserves layout space; hidden content stays outside accessibility. */
+.speech-word-translation.is-visible,.hint-translation.is-visible,.speech-hint.is-open{visibility:visible}
+.speech-hint:not(.is-open) *{visibility:hidden}

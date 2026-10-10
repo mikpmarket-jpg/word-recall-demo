@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<script src="app-data-mode.js?v=20261008-clean-ui"></script>
+<script src="test-fixture.js?v=20261007-cleanup"></script>
+<script src="app-preferences.js?v=20261008-clean-ui"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fbf9f4">
+  <title>Word Recall · Ваш словарный запас</title>
+  <link rel="stylesheet" href="styles.css?v=20261008-mobile-night"><link rel="stylesheet" href="cycle.css?v=20261007-cycle"><link rel="stylesheet" href="app-shell.css?v=20261007-compact"><link rel="stylesheet" href="learning-controls.css?v=20261007-counts2">
+  <script src="cycle-corpus.js?v=20261007-cleanup" defer></script><script src="cycle-store.js?v=20261008-clean-ui" defer></script>
+  <script src="learning-ui.js?v=20261008-scenarios" defer></script><script src="app.js?v=20261008-clean-ui" defer></script><script src="learning-settings.js?v=20261008-clean-ui" defer></script>
+  <script src="app-nav.js?v=20261007-cleanup" defer></script>
+<link rel="stylesheet" href="screen-header.css"><link rel="stylesheet" href="app-spacing.css">
+<link rel="stylesheet" href="app-preferences.css?v=20261008-clean-ui">
+<link rel="stylesheet" href="app-guidance.css?v=20261008-clean-ui">
+<script src="app-guidance.js?v=20261008-clean-ui" defer></script>
+</head>
+<body data-nav="words">
+  <div class="workspace">
+    <aside class="notes">
+      <a class="project-name" href="index.html">WORD RECALL <span>01</span></a>
+      <nav class="prototype-screen-links" aria-label="Экраны прототипа"><a href="index.html">Главная</a><a href="words.html" aria-current="page">Слова</a><a href="cycle.html">Цикл обучения →</a><a href="circle-1.html">Первый круг →</a><a href="circle-2.html">Аудирование →</a><a href="circle-3.html">Круг 3 →</a><a href="circle-4.html">Круг 4</a></nav>
+      <div class="edition">НОВЫЙ ПРОТОТИП · 04 ОКТЯБРЯ 2026</div>
+      <h1>Сначала —<br>ваши слова.</h1>
+      <p class="intro">Один экран, чтобы отделить знакомое от того, что предстоит изучить.</p>
+      <div class="reference"><span class="tiny-label">ЭКРАН 01</span><h2>Отбор слов</h2><p>В «Изучаю» смахните слово вправо.<br>В «Знаю» — влево, чтобы вернуть.</p><p>На компьютере можно перетаскивать строки мышью. С клавиатуры — выделить строку и нажать стрелку в направлении нужной вкладки.</p></div>
+      <details class="demo-panel">
+        <summary>Проверка состояний <span>＋</span></summary>
+        <p>Служебные переключатели макета. Они не входят в приложение.</p>
+        <div class="demo-buttons">
+          <button data-demo="list-limit">Лимит «Изучаю»</button>
+          <button data-demo="day-limit">Лимит за день</button>
+          <button data-demo="auto">Событие автодобавления</button>
+          <button data-demo="heard">Событие переноса в «Знаю»</button>
+          <button data-demo="empty">Пустой список</button>
+          <button data-demo="reset">Начальное состояние</button>
+        </div>
+      </details>
+      <p class="prototype-note">Слова, рейтинги, количества дефиниций и начальные лимиты — демонстрационные. Алгоритм подбора фраз и условия автоматических событий пока не моделируются.</p>
+    </aside>
+
+    <main class="phone" aria-label="Словарный запас">
+      <div class="words-scroll" id="words-scroll">
+      <header class="screen-header">
+        <a class="header-back" href="cycle.html" aria-label="Вернуться на экран «Цикл обучения»">‹</a>
+        <h2 class="header-title">Словарный запас</h2>
+        <span class="header-actions" aria-hidden="true"></span>
+      </header>
+
+      <div data-word-add-panel></div>
+
+      <div class="list-controls">
+        <div class="tabs" role="tablist" aria-label="Статус слов"><button id="tab-learn" role="tab" aria-controls="word-list" aria-selected="true" data-tab="learn">Изучаю <span id="learn-count"></span></button><button id="tab-cycle" role="tab" aria-controls="word-list" aria-selected="false" data-tab="cycle">Текущий цикл <span id="cycle-count"></span></button><button id="tab-known" role="tab" aria-controls="word-list" aria-selected="false" data-tab="known">Знаю <span id="known-count"></span></button></div>
+
+      </div>
+      <div class="word-list" id="word-list" role="tabpanel" aria-labelledby="tab-learn"></div>
+      </div>
+
+      <div class="toast" id="toast" role="status" hidden><span id="toast-text"></span><button id="undo" hidden>Отменить</button><button id="dismiss-toast" aria-label="Закрыть уведомление">×</button></div>
+    </main>
+  </div>
+
+
+</body>
+</html>

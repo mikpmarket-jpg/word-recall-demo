@@ -1,0 +1,63 @@
+
+.circle-phone .circle-body{padding-bottom:12px;scrollbar-width:none}
+.circle-phone .circle-body::-webkit-scrollbar{display:none}
+.circle-phone .scene-placeholder,.circle-phone .scene-player{height:var(--circle-scene-height,auto)}
+.circle-phone .sync-panel summary{min-height:40px}
+.circle-phone .phrase-section{padding-top:18px}
+.circle-phone .task{margin-top:16px;padding-top:12px}
+.circle-phone .task p{font-size:13px;line-height:1.7;min-height:44px;margin-top:8px}
+.circle-phone .phrase-tools{margin-top:10px}
+.circle-phone .phrase-nav-hint{margin-top:10px;margin-bottom:0}
+.circle-phone .phrase-translation{font-size:14px;line-height:1.6;margin-top:12px}
+.circle-phone .word-tap-hint{margin-top:10px}
+.circle-phone .circle-footer{padding-top:10px}
+.circle-phone .playback-line{min-height:11px}
+.circle-phone .circle-toast{bottom:135px}
+.circle-phone.fit-compact .phrase-section{padding-top:12px}
+.circle-phone.fit-compact .phrase-text{font-size:20px;line-height:1.45}
+.circle-phone.fit-compact .task{margin-top:10px;padding-top:10px}
+.circle-phone.fit-compact .task p{min-height:42px}
+.circle-phone.fit-compact .phrase-tools{margin-top:8px}
+.circle-phone.fit-compact .phrase-nav-hint{margin-top:8px}
+.circle-phone.fit-compact .circle-footer{padding:10px var(--circle-gutter) max(12px,env(safe-area-inset-bottom))}
+.circle-phone.fit-compact .audio-pill{min-height:67px;padding:6px}
+.circle-phone.fit-compact .main-play{width:50px;height:50px}
+.circle-phone.fit-compact .sync-content{padding-bottom:10px}
+.circle-phone.fit-compact .waveform,.circle-phone.fit-compact .boundary-range{height:36px}
+.circle-phone.fit-compact .boundary-range::-webkit-slider-runnable-track,.circle-phone.fit-compact .boundary-range::-webkit-slider-thumb{height:36px}
+.circle-phone.fit-compact .boundary-range::-moz-range-track,.circle-phone.fit-compact .boundary-range::-moz-range-thumb{height:36px}
+.circle-phone.fit-compact .boundary-controls>div{gap:6px}
+.circle-phone.fit-compact .boundary-controls button{height:28px}
+.circle-phone.fit-compact .sync-actions{margin-top:10px}
+.circle-phone.fit-tight .phrase-section{padding-top:9px}
+.circle-phone.fit-tight .phrase-text{font-size:18px;line-height:1.4}
+.circle-phone.fit-tight .task{margin-top:9px;padding-top:8px}
+.circle-phone.fit-tight .task p{font-size:12px;min-height:38px;margin-top:5px}
+.circle-phone.fit-tight .phrase-tools{margin-top:6px}
+.circle-phone.fit-tight .phrase-tools button{min-height:30px}
+.circle-phone.fit-tight .phrase-nav-hint{font-size:8px;margin-top:6px;gap:12px}
+.circle-phone.fit-tight .review-actions{margin-top:7px}
+.circle-phone.fit-tight .reveal-text,.circle-phone.fit-tight .know-phrase{min-height:30px;padding-inline:10px;font-size:10px}
+.circle-phone.fit-tight .phrase-translation{font-size:13px;margin-top:8px}
+.circle-phone.fit-tight .sync-panel summary{min-height:34px}
+.circle-phone.fit-tight .boundary-controls{gap:10px}
+.circle-phone.fit-tight .boundary-controls>div{flex-direction:row;align-items:center;gap:6px}
+.circle-phone.fit-tight .boundary-controls>div:last-child{align-items:center}
+.circle-phone.fit-tight .boundary-controls button{width:28px;height:27px}
+.circle-phone.fit-tight .sync-content{padding-bottom:6px}
+.circle-phone.fit-tight .sync-actions{margin-top:6px}
+.circle-phone.fit-small-scene .scene-icon,.circle-phone.fit-small-scene .scene-caption,.circle-phone.fit-small-scene .scene-placeholder>span:not(.scene-caption){display:none}
+.circle-phone.fit-small-scene .scene-placeholder p{font-size:18px;margin:0 0 20px}
+.circle-phone.fit-small-scene .scene-footer{padding-block:6px}
+@media(max-width:480px){.circle-phone .circle-footer{padding-bottom:max(16px,env(safe-area-inset-bottom))}}
+
+.circle-phone.fit-tight .circle-body{padding-bottom:6px}.circle-phone.fit-tight .phrase-nav-hint{margin-top:4px}
+
+.circle-phone.fit-tight .audio-progress{margin-bottom:10px}.circle-phone.fit-tight .playback-line{margin-bottom:6px}
+.circle-phone .word-tap-hint{min-height:32px;display:flex;align-items:center;justify-content:center}
+.circle-phone .task p,.circle-phone.fit-compact .task p{min-height:45px}
+.circle-phone.fit-tight .task p{min-height:40px;line-height:1.6}
+.circle-phone.fit-tight .waveform,.circle-phone.fit-tight .boundary-range{height:32px}
+.circle-phone.fit-tight .boundary-range::-webkit-slider-runnable-track,.circle-phone.fit-tight .boundary-range::-webkit-slider-thumb{height:32px}
+.circle-phone.fit-tight .boundary-range::-moz-range-track,.circle-phone.fit-tight .boundary-range::-moz-range-thumb{height:32px}
+.circle-phone.fit-tight .sync-content{padding-bottom:4px}.circle-phone.fit-tight .circle-body{padding-bottom:5px}

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<script src="app-data-mode.js?v=20261008-clean-ui"></script>
+<script src="test-fixture.js?v=20261007-cleanup"></script>
+<script src="app-preferences.js?v=20261008-clean-ui"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fbf9f4"><title>Word Recall · Активная речь</title>
+  <link rel="stylesheet" href="styles.css?v=20261008-mobile-night"><link rel="stylesheet" href="circle-1.css"><link rel="stylesheet" href="circle-layout.css?v=layout-3"><link rel="stylesheet" href="circle-4.css?v=4">
+  <script src="circle-data.js?v=20261007-cleanup" defer></script><script src="cycle-corpus.js?v=20261007-cleanup" defer></script><script src="cycle-store.js?v=20261008-clean-ui" defer></script><script src="cycle-bridge.js?v=20261008-home" defer></script><script src="circle-4-data.js?v=20261007-cleanup" defer></script><script src="circle-4.js?v=20261007-cleanup" defer></script>
+  <link rel="stylesheet" href="cycle.css?v=20261007-cycle">
+<link rel="stylesheet" href="screen-header.css"><link rel="stylesheet" href="app-spacing.css">
+<link rel="stylesheet" href="app-preferences.css?v=20261008-clean-ui">
+<link rel="stylesheet" href="app-guidance.css?v=20261008-clean-ui">
+<script src="app-guidance.js?v=20261008-clean-ui" defer></script>
+</head>
+<body>
+  <div class="workspace">
+    <aside class="notes">
+      <a class="project-name" href="words.html">WORD RECALL <span>05</span></a>
+      <nav class="prototype-nav" aria-label="Экраны прототипа"><a href="words.html">Слова</a><a href="cycle.html">Цикл</a><a href="circle-1.html">Круг 1</a><a href="circle-2.html">Круг 2</a><a href="circle-3.html">Круг 3</a><a href="circle-4.html" aria-current="page">Круг 4</a></nav>
+      <div class="edition">ЭКСПЕРИМЕНТАЛЬНЫЙ ПРОТОТИП</div>
+      <h1>Слово.<br>Ваша фраза.</h1>
+      <p class="intro">Придумайте собственную фразу и произнесите её вслух.</p>
+      <div class="reference"><span class="tiny-label">АКТИВНАЯ РЕЧЬ</span><h2>Одно слово — любая фраза</h2><p>Свайп вверх — следующее слово, вниз — предыдущее. Свайп переключает материал; выполнение и правильность ответа пока не оцениваются.</p></div>
+      <details class="demo-panel"><summary>Проверка макета <span>＋</span></summary><p>Три слова из материала первых макетов: wait, train, table. Общий алгоритм цикла пока не подключён.</p><div class="demo-buttons"><button id="demo-prev">← Предыдущее слово</button><button id="demo-next">Следующее слово →</button></div></details>
+      <p class="prototype-note">Рабочая идея, не окончательное ТЗ. Тематические задания по уровням, дефиниции, STT и проверку через ИИ можно обсудить после тестов. Число слов и порядок кругов могут меняться.</p>
+      
+    </aside>
+    <main class="phone circle-phone speech-phone" aria-label="Прототип активной речи">
+      <header class="circle-header screen-header">
+        <a class="exit-circle header-back" href="cycle.html" aria-label="Вернуться на экран «Цикл обучения»">‹</a>
+        <h2 class="header-title">Активная речь</h2>
+        <span class="header-actions" aria-hidden="true"></span>
+      </header>
+      <div class="speech-body" id="speech-body">
+        <section class="speech-word-block" aria-label="Опорное слово">
+          <span class="speech-word-label">Опорное слово</span>
+          <h3 class="speech-word" id="speech-word" lang="en" aria-live="polite"></h3>
+          <p class="speech-word-translation" id="word-translation" aria-hidden="true"></p>
+        </section>
+        <section class="speech-task" aria-label="Задание">
+          <span class="tiny-label">ВАША ЗАДАЧА</span>
+          <p>Придумайте и произнесите вслух любую фразу с этим словом.</p>
+        </section>
+        <section class="speech-hint" id="speech-hint" aria-label="Фраза-подсказка" aria-hidden="true" inert>
+          <p class="hint-phrase" id="hint-phrase" lang="en"></p>
+          <p class="hint-translation" id="hint-translation" aria-hidden="true"></p>
+          <div class="hint-controls"><button id="hint-play" aria-label="Слушать фразу-подсказку"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="hint-play-icon" d="m8 5 11 7-11 7z"/></svg><span id="hint-play-label">Слушать фразу</span></button><button id="toggle-hint-translation" aria-pressed="false">Перевод фразы</button></div>
+        </section>
+      </div>
+      <footer class="circle-footer speech-footer">
+        <div class="speech-help-row"><button id="toggle-hint" aria-expanded="false" aria-controls="speech-hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16c0-2-3-3-3-7a7 7 0 0 1 14 0c0 4-3 5-3 7M8 16h8m-7 3h6m-5 3h4"/></svg><span id="hint-toggle-label">Подсказка</span></button></div>
+        <div class="audio-pill"><button class="pill-tool" id="toggle-word-translation" aria-label="Перевод слова" aria-pressed="false"><span class="translate-icon" aria-hidden="true">A<span>я</span></span><span>Перевод слова</span></button><button class="main-play" id="word-play" aria-label="Слушать слово"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="word-play-icon" d="m8 5 11 7-11 7z"/></svg></button><button class="pill-tool" id="word-tempo" aria-label="Изменить темп слова"><strong id="word-tempo-value">1,0×</strong><span>Темп</span></button></div>
+      </footer>
+      <div class="circle-toast" id="speech-toast" role="status" hidden></div>
+    </main>
+  </div>
+  <audio id="word-audio" preload="metadata"></audio><audio id="hint-audio" preload="metadata"></audio>
+</body>
+</html>

@@ -1,0 +1,49 @@
+:root[data-theme=night]{color-scheme:dark;--paper:#222724;--soft:#2d3530;--line:#424b44;--ink:#eeeae1;--muted:#b3b9b2;--green:#a5cbb5}
+:root[data-theme=night] .phone{color:var(--ink)}
+:root[data-theme=night] :is(.app-button,.primary,.main-play,.catalog-icon.add){color:#222724}
+:root[data-theme=night] :is(.video-card,.material-card,.topic-theme-card,.topic-item,.upload-card,.audio-pill,.app-search){background:var(--soft);color:var(--ink);border-color:var(--line)}
+:root[data-test-data=off] :is(.demo-panel,.prototype-note){display:none!important}
+.dataset-empty{padding-top:0}.dataset-empty>.app-button{margin-top:22px}
+
+/* Shared surfaces and contrast for every prepared screen. */
+:root[data-theme=night]{--surface:#303832;--selected:#3c5143;--on-green:#17271f;--accent:#dda77f;background:#191e1b}
+:root[data-theme=night] :is(.phone,dialog,.quantity,.setting-row input,.phrase-boundary-stepper,.hint-controls button){border-color:var(--line)}
+:root[data-theme=night] :is(.playback-pill,.voice-options span,.audio-stepper input,.calibration-row input,.offset-stepper,.topic-style,.upload-field input,.upload-field textarea,.upload-split label,.upload-file,.setting-row input){background:var(--surface);color:var(--ink);border-color:var(--line)}
+:root[data-theme=night] :is(.add-panel,.method-note,.app-footer,.close,.grammar button,.tabs button span,.listen-tabs button span,.scene-placeholder,.listen-row.is-current .listen-front,.upload-reader-line.is-current,.phrase-waveform){background:var(--soft);border-color:var(--line)}
+:root[data-theme=night] :is(.video-secondary-actions .video-action,.upload-mode,.material-number){background:var(--soft);color:var(--green);border-color:var(--line)}
+:root[data-theme=night] :is(.voice-options input:checked+span,.calibration-tabs button[aria-pressed=true],#control-narrator[aria-pressed=true],.topic-style.is-selected,.upload-category input:checked+span,.upload-split label:has(input:checked),.phrase-tools button[aria-pressed=true],.review-phone .review-icon[aria-pressed=true],.know-phrase.is-known:disabled){background:var(--selected);color:var(--green);border-color:var(--green);box-shadow:none}
+:root[data-theme=night] :is(.pill-play,#load-video,.playback-rates button[aria-pressed=true],.catalog-tabs a[aria-current=page],.catalog-filter a[aria-current=true],.catalog-pagination a[aria-current=page],.video-action.main,.topic-actions .video-action.main,.upload-primary:not(:disabled),.upload-mode:first-child,.grammar button[aria-pressed=true],.app-chipbar a[aria-current=page],.know-phrase:not(:disabled),.review-phone .review-actions .know-phrase.is-checking,.row-underlay,.listen-underlay){background:var(--green);color:var(--on-green)}
+:root[data-theme=night] .app-button.secondary{color:var(--green);border-color:var(--line)}
+:root[data-theme=night] :is(.video-card-meta,.material-card .video-card-meta,.collection-accent,.topic-description,.topic-style-description,.phrase-translation,.task p,.speech-task p,.review-phone .articulation-tip p,.app-feature p,.method-note,.word-tap-hint,.phrase-nav-hint,.list-caption>span,.rank,.round-number,.section-number,.tabs button,.listen-tabs button,.quantity button,.scene-placeholder,.scene-placeholder p,.material-level,.video-chevron){color:var(--muted)}
+:root[data-theme=night] :is(.tabs button[aria-selected=true],.listen-tabs button[aria-selected=true],.material-level strong,.topic-style-meta){color:var(--green)}
+:root[data-theme=night] :is(.material-card .material-duration,.topic-style-time){color:var(--ink)}
+:root[data-theme=night] .material-level{border-color:var(--line)}
+:root[data-theme=night] :is(.tabs button[aria-selected=true] span,.listen-tabs button[aria-selected=true] span){background:var(--selected)}
+:root[data-theme=night] :is(.playback-loop,.phrase-divider-number){color:var(--muted)}
+:root[data-theme=night] :is(.phrase-word.is-new,.listen-word.is-target){color:#efbd96}
+:root[data-theme=night] .phrase-word.is-new{background:#513d2c;border-color:var(--accent)}
+:root[data-theme=night] .phrase-waveform svg{stroke:#b6ada0}
+:root[data-theme=night] :is(.scene-icon,.waveform>svg){stroke:var(--muted)}
+:root[data-theme=night] .scene-player button{background:var(--surface);color:var(--green)}
+:root[data-theme=night] .scene-footer{background:var(--surface);border-color:var(--line)}
+:root[data-theme=night] :is(.switch,.playback-inline-toggle input,.listen-settings-sheet input[type=checkbox]){background:#627065}
+:root[data-theme=night] :is(.switch:checked,.playback-inline-toggle input:checked,.listen-settings-sheet input[type=checkbox]:checked){background:var(--green)}
+:root[data-theme=night] :is(.switch::before,.playback-inline-toggle input::after,.listen-settings-sheet input[type=checkbox]::after){background:var(--paper)}
+:root[data-theme=night] :is(.playback-error,.settings-error,.app-feedback.is-error,.upload-actions-menu .upload-danger){color:#f1aca2}
+:root[data-theme=night] :is(.notes,.settings-notes .service-panel){background:#191e1b;color:var(--ink);border-color:var(--line)}
+:root[data-theme=night] :is(.notes p,.home-demo-range,.prototype-note){color:var(--muted)}
+:root[data-theme=night] :is(.demo-buttons button,.service-row select,.service-actions button){background:var(--soft);color:var(--ink);border-color:var(--line)}
+:root[data-theme=night] .home-preview button[aria-pressed=true]{background:var(--green);color:var(--on-green);border-color:var(--green)}
+:root[data-theme=night] :is(.home-preview,.demo-panel,.reference,.service-row){border-color:var(--line)}
+@media(hover:hover){
+  :root[data-theme=night] :is(.video-card:not(:disabled):hover,.phrase-word:hover,.listen-word:hover,.review-phone .articulation-tip button:hover){background:var(--selected);border-color:var(--line)}
+  :root[data-theme=night] :is(.primary:hover,.main-play:hover,.know-phrase:not(:disabled):hover){background:#bedcc9;color:var(--on-green)}
+}
+:root[data-theme=night] .filter-options span{background:var(--surface);color:var(--muted);border-color:var(--line)}
+:root[data-theme=night] .filter-options input:checked+span{background:var(--selected);color:var(--green);border-color:var(--green)}
+:root[data-theme=night] .filter-apply{color:var(--on-green)}
+:root[data-theme=night] .experiment-settings{background:var(--soft)}
+
+/* Review notes and controls are available only via ?preview=1. */
+:root:not([data-review-tools=on]) .notes{display:none!important}
+@media(min-width:850px){:root:not([data-review-tools=on]) .workspace{grid-template-columns:minmax(0,430px);justify-content:center;gap:0}}

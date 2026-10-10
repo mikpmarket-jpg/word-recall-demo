@@ -1,0 +1,38 @@
+/* Circle 3: reserve reading space and keep phrase actions next to the player. */
+.review-phone .phrase-frame{min-height:3.1em;font-size:22px;line-height:1.55;display:flex;align-items:center;justify-content:center}
+.review-phone .phrase-frame>.phrase-text:not(.phrase-ghost){display:block;inset:auto 0;top:50%;transform:translateY(-50%)}
+.review-phone .phrase-frame>.phrase-text[hidden]{display:none!important}
+.review-phone .phrase-translation{min-height:3.2em;margin-top:8px;visibility:hidden}
+.review-phone .phrase-translation.is-visible{visibility:visible}
+.review-phone .review-task{margin-top:14px}
+.review-phone .review-task p{min-height:42px}
+.review-phone .review-footer{border-top:0;padding-top:8px}
+.review-phone .review-actions{display:grid;grid-template-columns:44px 44px minmax(0,1fr) minmax(0,1fr);gap:6px;margin:0 0 12px;min-height:44px}
+.review-phone .review-actions button{min-height:44px;border-radius:22px;padding:0 8px;font-size:11px;gap:5px;min-width:0}
+.review-phone .review-actions .review-icon{display:flex;justify-content:center;align-items:center;padding:0;border:1px solid var(--line);background:var(--soft);color:var(--muted)}
+.review-phone .review-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.review-phone .review-icon[aria-pressed=true]{color:var(--green);background:#e8efea;border-color:#1e463660}
+.review-phone .reveal-text svg{display:none}
+.review-phone.fit-compact .phrase-frame{font-size:20px;line-height:1.45;min-height:2.9em}
+.review-phone.fit-tight .phrase-frame{font-size:18px;line-height:1.4;min-height:2.8em}
+.review-phone.fit-tight .review-actions{margin-top:0;margin-bottom:8px}
+.review-phone.fit-tight .review-task p{min-height:38px}
+.review-phone.fit-small-scene .scene-placeholder p{margin:0}
+@media(max-width:360px){.review-phone .review-actions{grid-template-columns:40px 40px minmax(0,1fr) minmax(0,1fr);gap:4px}.review-phone .review-actions button{padding:0 5px;font-size:10px;gap:3px}.review-phone #know-icon{font-size:12px}}
+.review-phone .review-actions button.reveal-text,.review-phone .review-actions button.know-phrase{min-height:44px;padding-inline:8px;font-size:11px}
+@media(max-width:360px){.review-phone .review-actions button.reveal-text,.review-phone .review-actions button.know-phrase{padding-inline:5px;font-size:10px}}
+
+/* Green identifies the initial checking state, also before the first play. */
+.review-phone .review-actions .know-phrase.is-checking{background:var(--green);border-color:var(--green);color:#fff;opacity:1}
+
+/* Quiet explanation surface from DESIGN.md: surface-container / surface-add. */
+.review-phone .articulation-tip{position:relative;background:var(--soft);border-radius:12px;margin:8px 0 0;padding:11px 38px 11px 12px}
+.review-phone .articulation-tip p{font-size:12px;line-height:1.5;color:#55534e;margin:0;min-height:0}
+.review-phone .articulation-tip button{position:absolute;top:2px;right:2px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--muted);border-radius:50%}
+.review-phone .articulation-tip button:hover{background:#e4e2dd}
+.review-phone .articulation-tip button svg{width:14px;height:14px}
+.review-phone.fit-tight .articulation-tip{padding-block:9px;margin-top:6px}
+.review-phone.fit-tight .articulation-tip p{font-size:11px;line-height:1.45;min-height:0;margin:0}
+.review-phone.fit-tight .review-phrase-section{padding-top:6px}
+.review-phone.fit-tight .review-task{margin-top:6px;padding-top:6px}
+.review-phone.fit-tight .articulation-tip{padding-block:7px;margin-top:4px}

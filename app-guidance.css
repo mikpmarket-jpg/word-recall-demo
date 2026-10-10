@@ -1,0 +1,4 @@
+.guidance-empty{padding:12px 0;color:var(--muted);font-size:13px;line-height:1.55}
+.guidance-empty p{margin:0 0 10px}.guidance-empty .app-button{font-size:12px}
+.add-availability{font-size:12px;line-height:1.5;color:var(--muted);margin:10px 0 0}
+.add-availability a{color:var(--green)}

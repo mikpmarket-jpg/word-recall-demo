@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<script src="app-data-mode.js?v=20261008-clean-ui"></script>
+<script src="test-fixture.js?v=20261007-cleanup"></script>
+<script src="app-preferences.js?v=20261008-clean-ui"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#fbf9f4"><title>Word Recall · Настройки приложения</title>
+  <link rel="stylesheet" href="styles.css?v=20261008-mobile-night"><link rel="stylesheet" href="app-shell.css?v=20261007-compact">
+  <link rel="stylesheet" href="screen-header.css"><link rel="stylesheet" href="app-spacing.css">
+  <link rel="stylesheet" href="settings.css?v=20261007-cleanup2">
+  <script src="app-nav.js?v=20261007-cleanup" defer></script><script src="settings.js?v=20261008-clean-ui" defer></script>
+<link rel="stylesheet" href="app-preferences.css?v=20261008-clean-ui">
+<link rel="stylesheet" href="app-guidance.css?v=20261008-clean-ui">
+<script src="app-guidance.js?v=20261008-clean-ui" defer></script>
+</head>
+<body data-nav="settings">
+<div class="workspace">
+  <aside class="notes settings-notes">
+    <a class="project-name" href="index.html">WORD RECALL <span>НАСТРОЙКИ</span></a>
+    <details class="service-panel" open>
+      <summary>Служебная панель</summary>
+      <p>Состояния макета. Вход, оплата и подключение словаря здесь моделируются, без обращения к сервисам.</p>
+      <label class="service-row">Версия<select id="demo-plan"><option value="free">Бесплатная</option><option value="paid">Платная</option></select></label>
+      <label class="service-row">Аккаунт<select id="demo-account"><option value="out">Без входа</option><option value="in">Выполнен вход</option></select></label>
+      <label class="service-row">Тестовые данные<input id="demo-content" type="checkbox" role="switch"></label>
+      <div class="service-actions"><button data-open="paywall">Показать пейвол</button><button data-open="onboarding">Показать онбординг</button></div>
+      <label class="service-row">Восстановление покупок<select id="demo-restore"><option value="found">Покупка найдена</option><option value="empty">Покупок нет</option></select></label>
+      <p id="service-status" role="status">Один переключатель для каталога, слов, учебных кругов, статей и тестового прогресса. Пользовательские загрузки сохраняются. Отправка обратной связи на сервер пока не подключена.</p>
+    </details>
+  </aside>
+  <main class="phone" aria-label="Настройки приложения">
+    <div class="app-screen settings-screen">
+      <header class="app-page-header"><div class="screen-header"><a class="header-back" href="index.html" aria-label="На главную">‹</a><h1 class="header-title">Настройки приложения</h1><span class="header-actions"></span></div></header>
+      <section class="settings-group" aria-labelledby="languages-title"><h2 id="languages-title">Языки</h2><div class="settings-card">
+        <label class="general-row"><span>Язык интерфейса</span><select aria-label="Язык интерфейса"><option>Русский</option></select></label>
+        <label class="general-row"><span>Язык перевода</span><select aria-label="Язык перевода"><option>Русский</option></select></label>
+      </div></section>
+      <section class="settings-group" aria-labelledby="dictionaries-title"><h2 id="dictionaries-title">Словари</h2><div class="settings-card"><button class="general-row" data-open="dictionaries"><span>Мои словари</span><span class="row-value" id="dictionary-summary"></span><span class="chevron">›</span></button></div></section>
+      <section class="settings-group" aria-labelledby="appearance-title"><h2 id="appearance-title">Вид</h2><div class="settings-card">
+        <div class="general-row setting-wrap"><span>Оформление</span><div class="setting-segment" role="group" aria-label="Оформление"><button data-theme="day">День</button><button data-theme="night">Ночь</button></div></div>
+      </div></section>
+      <section class="settings-group" aria-labelledby="account-title"><h2 id="account-title">Аккаунт и подписка</h2><div class="settings-card">
+        <button class="general-row" data-open="account"><span>Аккаунт</span><span class="row-value" id="account-summary"></span><span class="chevron">›</span></button>
+        <button class="general-row" data-open="subscription"><span>Подписка</span><span class="row-value" id="plan-summary"></span><span class="chevron">›</span></button>
+        <button class="general-row" data-open="restore"><span>Восстановить покупки</span><span class="chevron">›</span></button>
+      </div></section>
+      <section class="settings-group" aria-labelledby="feedback-title"><h2 id="feedback-title">Обратная связь</h2>
+        <form id="feedback-form"><textarea id="feedback-text" aria-label="Ваше сообщение" placeholder="Ваши пожелания к приложению. Расскажите, чего не хватает." maxlength="5000"></textarea><button class="sheet-action" type="submit" id="send-feedback" disabled>Отправить</button></form>
+      </section>
+      <section class="settings-group" aria-labelledby="about-title"><h2 id="about-title">О приложении</h2><div class="settings-card">
+        <button class="general-row" data-open="privacy"><span>Конфиденциальность</span><span class="chevron">›</span></button>
+        <button class="general-row" data-open="terms"><span>Условия использования</span><span class="chevron">›</span></button>
+        <div class="general-row"><span>Word Recall</span></div>
+      </div></section>
+      <p id="settings-status" role="status" hidden></p>
+    </div>
+  </main>
+</div>
+<dialog id="settings-dialog" class="general-sheet" aria-labelledby="sheet-title"><div class="sheet-handle" aria-hidden="true"></div><header class="general-sheet-header"><h2 id="sheet-title"></h2><button id="close-sheet" aria-label="Закрыть">×</button></header><div id="sheet-body" class="general-sheet-body"></div></dialog>
+<input type="file" id="dictionary-file" hidden>
+</body></html>

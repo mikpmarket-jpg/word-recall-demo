@@ -1,0 +1,59 @@
+/* Shared horizontal rhythm. Load after screen-specific styles. */
+:root {
+  --app-gutter: 12px;
+}
+
+.phone {
+  --circle-gutter: var(--app-gutter);
+  --listen-gutter: var(--app-gutter);
+}
+
+.app-screen,
+.cycle-scroll {
+  --screen-gutter: var(--app-gutter);
+  padding-inline: var(--app-gutter);
+}
+
+/* Nested headers keep their existing full-width layout. */
+.phone .screen-header,
+.phone .app-page-header .screen-header {
+  padding-inline: var(--app-gutter);
+}
+
+.phone .app-header,
+.words-scroll .list-controls,
+.words-scroll .word-list,
+.phone .speech-body {
+  padding-inline: var(--app-gutter);
+}
+
+/* Vocabulary has no padded parent; the cycle panel already has one. */
+.words-scroll .add-panel,
+.phone .cycle-entry {
+  margin-inline: var(--app-gutter);
+}
+
+.phone .app-bottom-nav,
+.phone .app-footer,
+.phone .cycle-footer,
+.phone .circle-footer,
+.phone .listening-footer {
+  padding-inline: var(--app-gutter);
+}
+
+/* Sheets are mounted outside the phone as well as inside it. */
+.sheet-header,
+.sheet-scroll,
+.sheet-footer,
+.learning-settings .sheet-scroll,
+.dictionary-content,
+.filter-sheet-header,
+.filter-sheet-body,
+.filter-sheet-footer {
+  padding-inline: var(--app-gutter);
+}
+
+.phone .circle-toast {
+  left: var(--app-gutter);
+  right: var(--app-gutter);
+}

@@ -1,0 +1,15 @@
+/* One compact header for screens inside the application. */
+.phone .screen-header{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:4px;min-height:64px;padding:10px 18px;flex-shrink:0}
+.phone .screen-header .header-title{font:400 clamp(18px,5.6vw,22px)/1.2 Georgia,"Times New Roman",serif;letter-spacing:-.45px;margin:0;min-width:0;max-width:none;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.phone .screen-header .header-back,.phone .screen-header .header-actions{display:flex;align-items:center;justify-content:center;width:44px;min-height:44px;color:var(--green)}
+.phone .screen-header .header-back{font-size:28px;line-height:1;text-decoration:none}
+.phone .screen-header .header-actions button{display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;color:var(--green)}
+.phone .screen-header .header-actions svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.phone .app-page-header:has(.screen-header){padding:0 0 16px}
+.app-screen{--screen-gutter:24px}.phone .app-page-header .screen-header{margin-inline:calc(-1 * var(--screen-gutter));padding-inline:18px}
+.cycle-scroll{--screen-gutter:25px}.cycle-scroll>.screen-header{margin-inline:calc(-1 * var(--screen-gutter))}
+.words-scroll{position:relative;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#d6d2c9 transparent}
+.words-scroll .list-controls{position:sticky;top:0;z-index:2;background:var(--paper);padding:14px 24px 0}
+.words-scroll .word-list{overflow:visible;flex:none;padding-bottom:16px}
+@media(max-width:480px){.app-screen{--screen-gutter:20px}.cycle-scroll{--screen-gutter:22px}}
+@media(max-width:350px){.app-screen,.cycle-scroll{--screen-gutter:16px}.phone .screen-header,.phone .app-page-header .screen-header{padding-inline:12px}}
