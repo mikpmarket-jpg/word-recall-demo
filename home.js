@@ -5,7 +5,8 @@
   const data = window.APP_CATALOG;
   const fixture = window.WORD_RECALL_TEST_FIXTURE?.home;
   const $ = id => document.getElementById(id);
-  let preview = new URLSearchParams(location.search).get('screen')==='start'?'start':'auto', completed = fixture?.completedCycles || 0;
+  const demo=window.WordRecallDemo,firstLaunch=window.WordRecallData?.isFirstLaunch;
+  let preview = new URLSearchParams(location.search).get('screen')==='start'?'start':demo.readHome().preview, completed = fixture?demo.readHome().completed:0;
   const el = (tag, cls, text) => {const node=document.createElement(tag);node.className=cls||'';if(text!=null)node.textContent=text;return node;};
   const url = (page, params) => page+'?'+new URLSearchParams(params);
   const read = key => {try{return JSON.parse((window.WordRecallData?.local || localStorage).getItem(key));}catch{return null;}};
@@ -22,12 +23,13 @@
   function learning() {
     const s=state();
     // Explicit prototype views never clear stored practice or viewing history.
+    if(firstLaunch){const words=read('word-recall-screen-01-v1');preview=!s.words.length&&!Object.keys(words?.statuses||{}).length?'start':'auto';}
     const starting=preview==='start';
     document.querySelector('.home-today').hidden=starting;
     document.querySelector('.home-screen').classList.toggle('home-start',starting);
     const empty=!s.words.length&&!s.phraseIds.length;
     $('home-continue-label').textContent=empty?'Добавить слова':starting?'Начать обучение':'Продолжить обучение';
-    const today=fixture&&preview!=='today-empty'?fixture.today:{newWords:0,reviewWords:0,minutes:0};
+    const today=firstLaunch?{newWords:read('word-recall-screen-01-v1')?.addedToday||0,reviewWords:0,minutes:0}:fixture&&preview!=='today-empty'?fixture.today:{newWords:0,reviewWords:0,minutes:0};
     $('today-new').textContent=today.newWords;
     $('today-review').textContent=today.reviewWords;
     $('today-minutes').replaceChildren(document.createTextNode(today.minutes),el('small','',' мин'));
@@ -100,10 +102,6 @@
   }
   function render() {
     learning();goals();materials();
-    document.querySelectorAll('[data-preview]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.preview===preview)));
-    $('demo-cycles').disabled=preview==='start';
-    $('demo-cycles').value=preview==='start'?0:completed;
-    $('demo-cycles-value').value=preview==='start'?0:completed;
   }
   function step(track,direction) {
     const width=(track.firstElementChild?.getBoundingClientRect().width||track.clientWidth*.85)+14;
@@ -112,14 +110,8 @@
   document.querySelectorAll('.home-carousel').forEach(track=>{
     track.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();step(track,event.key==='ArrowRight'?1:-1);}});
   });
-  document.querySelectorAll('[data-preview]').forEach(button=>button.addEventListener('click',()=>{
-    if(!fixture)return;preview=button.dataset.preview;
-    const address=new URL(location.href);
-    if(preview==='start')address.searchParams.set('screen','start');else address.searchParams.delete('screen');
-    history.replaceState(null,'',address);
-    render();
-  }));
-  $('demo-cycles').addEventListener('input',event=>{completed=Number(event.target.value);$('demo-cycles-value').value=completed;goals();});
+  window.addEventListener('word-recall-demo-change',()=>{preview=demo.readHome().preview;completed=fixture?demo.readHome().completed:0;render();});
+  if(firstLaunch&&demo.launch?.phase==='onboarding')location.replace('settings.html?view=onboarding&launch=1');
   const positions=()=>[document.querySelector('.home-screen'),...document.querySelectorAll('.home-carousel')];
   const savePositions=()=>positions().forEach((e,i)=>nav.remember('home:'+preview+':'+i,e));
   const restorePositions=()=>positions().forEach((e,i)=>nav.restore('home:'+preview+':'+i,e));

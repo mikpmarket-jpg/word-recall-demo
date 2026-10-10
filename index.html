@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#fbf9f4">
   <title>Word Recall · Главная</title>
-  <script src="app-data-mode.js?v=20261008-clean-ui"></script>
-  <script src="test-fixture.js?v=20261008-swipe"></script>
-  <script src="app-preferences.js?v=20261008-clean-ui"></script>
+  <script src="app-data-mode.js?v=20261010-service-panel"></script>
+  <script src="test-fixture.js?v=20261010-service-panel"></script>
+  <script src="app-preferences.js?v=20261010-service-panel"></script>
 <script src="app-navigation.js?v=20261008-navigation"></script>
   <link rel="stylesheet" href="styles.css?v=20261008-mobile-night">
   <link rel="stylesheet" href="app-shell.css?v=20261007-compact">
   <link rel="stylesheet" href="app-spacing.css">
-  <link rel="stylesheet" href="app-preferences.css?v=20261008-clean-ui">
+  <link rel="stylesheet" href="app-preferences.css?v=20261010-service-panel">
   <link rel="stylesheet" href="home.css?v=20261008-swipe">
   <script src="cycle-corpus.js?v=20261007-cleanup" defer></script>
-  <script src="cycle-store.js?v=20261008-clean-ui" defer></script>
+  <script src="cycle-store.js?v=20261010-service-panel" defer></script>
   <script src="app-catalog-data.js?v=20261007-cleanup" defer></script>
   <script src="topic-layout-data.js?v=20261007-cleanup" defer></script>
   <script src="topic-catalog-data.js?v=20261009-authored-versions" defer></script>
   <script src="catalog-work.js?v=20261008-navigation" defer></script>
-  <script src="home.js?v=20261009-import40" defer></script>
-  <script src="app-nav.js?v=20261007-cleanup" defer></script>
+  <script src="home.js?v=20261010-service-panel" defer></script>
+  <script src="app-nav.js?v=20261010-service-panel" defer></script>
 <link rel="stylesheet" href="app-guidance.css?v=20261008-clean-ui">
 <script src="app-guidance.js?v=20261008-clean-ui" defer></script>
 </head>
@@ -32,18 +32,6 @@
     <div class="edition">ГЛАВНАЯ · 08.10.2026</div>
     <h1>Ближе<br>к живой речи.</h1>
     <p class="intro">Сегодня → занятие → цели → материалы. Цели, каталог и материалы в работе листаются горизонтально.</p>
-    <section class="home-preview" aria-label="Проверка макета">
-      <span class="tiny-label">СОСТОЯНИЯ МАКЕТА</span>
-      <div class="demo-buttons">
-        <button type="button" data-preview="start" aria-pressed="false">Стартовый экран</button>
-        <button type="button" data-preview="auto" aria-pressed="true">Ежедневная главная</button>
-        <button type="button" data-preview="today-empty" aria-pressed="false">До занятий сегодня</button>
-        <button type="button" data-preview="active" aria-pressed="false">«В работе» — пример</button>
-      </div>
-      <p>Стартовый экран — до первого действия; ежедневная главная — после нескольких занятий. Переключение меняет только представление, не сохранённую сессию. В тестовом режиме числа «Сегодня» и цели — условный пример. Учёт времени и расчёт пути к сериалам ещё не подключены.</p>
-      <label class="home-demo-range">Пройдено циклов в примере <output id="demo-cycles-value">3</output><input id="demo-cycles" type="range" min="0" max="10" value="3"></label>
-      <a class="doc-link" href="settings.html?preview=1">Тестовые данные — в настройках ↗</a>
-    </section>
   </aside>
   <main class="phone" aria-label="Главная Word Recall">
     <div class="app-screen home-screen">

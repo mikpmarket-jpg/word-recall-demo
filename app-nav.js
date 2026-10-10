@@ -18,4 +18,11 @@
     nav.append(link);
   }
   phone.append(nav);
+  if(window.WordRecallData?.isFirstLaunch){
+    const banner=document.createElement('div');banner.className='first-launch-banner';
+    const label=document.createElement('span');label.textContent='Проверка первого запуска';
+    const exit=document.createElement('button');exit.type='button';exit.textContent='Завершить';
+    exit.onclick=()=>{if(window.WordRecallDemo.exitLaunch())location.href='index.html';else label.textContent='Не удалось завершить проверку. Повторите.';};
+    banner.append(label,exit);phone.prepend(banner);
+  }
 })();

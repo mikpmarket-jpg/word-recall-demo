@@ -7,6 +7,12 @@ window.WORD_RECALL_TEST_FIXTURE = window.WordRecallData?.isTest===false ? null :
   articleExamples:{time:'время',way:'путь; способ',day:'день',wait:'ждать',train:'поезд',table:'стол'}
 };
 
+// First-launch rehearsal keeps the prepared catalogue but starts with no learned words.
+if(window.WordRecallData?.isFirstLaunch&&window.WORD_RECALL_TEST_FIXTURE){
+  window.WORD_RECALL_TEST_FIXTURE.learningWords=[];
+  window.WORD_RECALL_TEST_FIXTURE.knownWords=[];
+}
+
 // Home-only layout examples: never seed real counters, cycle state or viewing history.
 if (window.WORD_RECALL_TEST_FIXTURE) window.WORD_RECALL_TEST_FIXTURE.home = {
   today: {newWords:7, reviewWords:24, minutes:12}, completedCycles:3, minutesPerCycle:20,

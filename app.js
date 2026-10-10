@@ -14,7 +14,7 @@ const STORAGE_KEY = 'word-recall-screen-01-v1';
 const $ = id => document.getElementById(id);
 const TODAY = () => { const date = new Date(); return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-'); };
 const integer = (value, fallback = 1) => Number.isFinite(Number(value)) && Number(value) >= 1 ? Math.min(1000, Math.floor(Number(value))) : fallback;
-const defaults = () => ({ version: 1, tab: 'learn', batch: 10, statuses: window.WORD_RECALL_TEST_FIXTURE?Object.fromEntries([...window.WORD_RECALL_TEST_FIXTURE.learningWords.map(id=>[id,'learn']),...window.WORD_RECALL_TEST_FIXTURE.knownWords.map(id=>[id,'known'])]):Object.fromEntries(WORDS.slice(0,16).map((w,i)=>[w.id,i<12?'learn':'known'])), day: TODAY(), addedToday: window.WordRecallData?.isTest===false?0:12, settings: { grammar: 'A2', capacity: 50, dailyLimit: 30, autoEnabled: false, autoCount: 5, preferOne: true, autoKnown: true } });
+const defaults = () => ({ version: 1, tab: 'learn', batch: 10, statuses: window.WORD_RECALL_TEST_FIXTURE?Object.fromEntries([...window.WORD_RECALL_TEST_FIXTURE.learningWords.map(id=>[id,'learn']),...window.WORD_RECALL_TEST_FIXTURE.knownWords.map(id=>[id,'known'])]):Object.fromEntries(WORDS.slice(0,16).map((w,i)=>[w.id,i<12?'learn':'known'])), day: TODAY(), addedToday: window.WordRecallData?.isTest===false||window.WordRecallData?.isFirstLaunch?0:12, settings: { grammar: 'A2', capacity: 50, dailyLimit: 30, autoEnabled: false, autoCount: 5, preferOne: true, autoKnown: true } });
 let state = defaults();
 function restore(){
 try {

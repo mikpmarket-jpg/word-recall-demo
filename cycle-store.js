@@ -11,8 +11,8 @@
       Array.isArray(s.settings.order) && s.settings.order.length === 4 && new Set(s.settings.order).size === 4 && s.settings.order.every(n=>[1,2,3,4].includes(n)) &&
       Array.isArray(s.settings.enabled) && s.settings.enabled.length > 0 && s.settings.enabled.every(n=>[1,2,3,4].includes(n)) &&
       ['study','review','phrases'].every(k=>Number.isInteger(s.settings[k]) && s.settings[k]>=0 && s.settings[k]<=100) && s.settings.phrases>0 &&
-      Array.isArray(s.words) && (s.words.length > 0 || window.WordRecallData?.isTest===false) && new Set(s.words.map(w=>w.id)).size === s.words.length && s.words.every(w=>corpus.words.some(c=>c.id===w.id) && ['study','review'].includes(w.role)) &&
-      Array.isArray(s.phraseIds) && (s.phraseIds.length > 0 || window.WordRecallData?.isTest===false) && s.phraseIds.every(id=>corpus.phrases.some(p=>p.id===id && s.words.some(w=>w.id===p.word))) &&
+      Array.isArray(s.words) && (s.words.length > 0 || window.WordRecallData?.isTest===false || window.WordRecallData?.isFirstLaunch) && new Set(s.words.map(w=>w.id)).size === s.words.length && s.words.every(w=>corpus.words.some(c=>c.id===w.id) && ['study','review'].includes(w.role)) &&
+      Array.isArray(s.phraseIds) && (s.phraseIds.length > 0 || window.WordRecallData?.isTest===false || window.WordRecallData?.isFirstLaunch) && s.phraseIds.every(id=>corpus.phrases.some(p=>p.id===id && s.words.some(w=>w.id===p.word))) &&
       s.words.every(w=>s.phraseIds.some(id=>corpus.phrases.some(p=>p.id===id && p.word===w.id))) && s.progress && typeof s.progress==='object';
   }
   function read() {
@@ -83,7 +83,8 @@
   function phrases(s){return s.phraseIds.map(id=>corpus.phrases.find(p=>p.id===id));}
   function words(s){return s.words.map(w=>({...corpus.words.find(p=>p.id===w.id),role:w.role}));}
   function setQueue(s,id,inQueue){s.queueIds=inQueue?[...new Set([...(s.queueIds||[]),id])]:(s.queueIds||[]).filter(wordId=>wordId!==id);write(s);}
-  const state=read() || create();
+  const savedState=read(),state=savedState || create();
+  if(!savedState&&window.WordRecallData?.isFirstLaunch){state.words=[];state.phraseIds=[];}
   // Upgrade the old one-phrase demonstration once, preserving the cycle and marks.
   // Subsequent settings changes, including one phrase per word, stay user controlled.
   if(state.demoPhraseCountVersion!==1){

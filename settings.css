@@ -10,3 +10,4 @@ html:has(.general-sheet[open]){overflow:hidden}
 
 #feedback-text{display:block;width:100%;min-height:125px;border:1px solid var(--line);border-radius:13px;background:var(--paper);color:var(--ink);padding:13px;font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;resize:vertical}
 #feedback-text::placeholder{color:var(--muted)}#feedback-form .sheet-action{margin-top:12px}
+.service-section{margin:0 0 24px}.service-section h3{font-size:15px;margin:22px 0 10px}.service-section .sheet-action{margin-top:8px}.service-section .service-row{font-size:14px;min-height:52px;border-color:var(--line)}.service-section .service-row select{font-size:13px;background:var(--soft);color:var(--ink);border-color:var(--line);min-height:42px}.service-range{width:100%;min-height:44px;accent-color:var(--green)}.service-preview-buttons [aria-pressed=true]{border:1px solid var(--green)}

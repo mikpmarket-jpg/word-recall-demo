@@ -47,3 +47,4 @@
 /* Review notes and controls are available only via ?preview=1. */
 :root:not([data-review-tools=on]) .notes{display:none!important}
 @media(min-width:850px){:root:not([data-review-tools=on]) .workspace{grid-template-columns:minmax(0,430px);justify-content:center;gap:0}}
+.first-launch-banner{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:var(--soft);border-bottom:1px solid var(--line);font-size:11px;flex-shrink:0}.first-launch-banner button{color:var(--green);text-decoration:underline;min-height:32px;font-size:12px}.first-launch-banner span{min-width:0}
